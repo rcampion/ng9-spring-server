@@ -1,5 +1,6 @@
 package com.rkc.zds.controller;
 
+import com.rkc.zds.dto.AuthorityDto;
 import com.rkc.zds.dto.LoginDto;
 import com.rkc.zds.dto.UserDto;
 import com.rkc.zds.service.AuthenticationService;
@@ -41,15 +42,20 @@ public class AuthenticationController {
     
     private void createDefaultAccount() {
         UserDto user = new UserDto();
-        user.setLogin("Guest");
-        user.setUserName("Guest");
-        user.setFirstName("Guest");
-        user.setLastName("Testing");
-        user.setPassword("Testing");
+        user.setLogin("admin");
+        user.setUserName("admin");
+        user.setFirstName("Admin");
+        user.setLastName("Master");
+        user.setPassword("ChangeIt");
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         user.setEnabled(1);
-        userService.saveUser(user);		
+        userService.saveUser(user);
+        
+		AuthorityDto role = new AuthorityDto();
+		role.setUserName(user.getLogin());
+		role.setAuthority("ROLE_ADMIN");
+		userService.saveAuthority(role);
 	}
 
 	@RequestMapping(value = "/logout",method = RequestMethod.GET)
