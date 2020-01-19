@@ -35,6 +35,11 @@ public class UserContactsServiceImpl implements UserContactsService {
 		return page;
 	}
 
+    public List<UserContactDto> getAllUserContacts(){
+    	List<UserContactDto> list = userContactsRepo.findAll();
+    	return list;
+    }
+    
 	@Override
 	public List<UserContactDto> findAllUserContacts(int userId) {
 
@@ -86,7 +91,7 @@ public class UserContactsServiceImpl implements UserContactsService {
 	}
 
 	@Override
-	public void saveUserContact(UserContactDto userContact) {
+	public void addUserContact(UserContactDto userContact) {
 		// checking for duplicates
 		List<UserContactDto> list = userContactsRepo.findByUserId(userContact.getUserId());
 
@@ -96,6 +101,12 @@ public class UserContactsServiceImpl implements UserContactsService {
 				return;
 			}
 		}
+
+		userContactsRepo.save(userContact);
+	}
+
+	@Override
+	public void saveUserContact(UserContactDto userContact) {
 
 		userContactsRepo.save(userContact);
 	}

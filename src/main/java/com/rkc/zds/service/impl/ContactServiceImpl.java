@@ -121,7 +121,7 @@ public class ContactServiceImpl implements ContactService {
 		contactRepo.saveAndFlush(contact);
 	}
 
-	@Transactional
+	// @Transactional
 	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void deleteContact(int id) {

@@ -38,7 +38,7 @@ public class AppConfig {
 		SimpleDriverDataSource db = null;
 		try {
 			driver = (EmbeddedDriver)Class.forName(EmbeddedDriver.class.getName()).newInstance();
-			db = new SimpleDriverDataSource(driver, "jdbc:derby:C:/_/data/pcm/derbyDB", "PCM", "PCM");
+			db = new SimpleDriverDataSource(driver, "jdbc:derby:/_/data/pcm/derbyDB", "PCM", "PCM");
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -46,7 +46,7 @@ public class AppConfig {
 		
 		return db;
 	}    
-    
+
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
@@ -83,7 +83,6 @@ public class AppConfig {
     public PlatformTransactionManager transactionManager(EntityManagerFactory emf){
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
-
         return transactionManager;
     }
 
