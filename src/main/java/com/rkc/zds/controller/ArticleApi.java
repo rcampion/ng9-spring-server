@@ -204,9 +204,32 @@ public class ArticleApi {
 			if (!AuthorizationService.canWriteArticle(temp, article)) {
 				throw new NoAuthorizationException();
 			}
+
+			deleteTagsForArticle(article);
+
 			articleRepository.delete(article);
 			return ResponseEntity.noContent().build();
 		}).orElseThrow(ResourceNotFoundException::new);
+	}
+
+	private void deleteTagsForArticle(ArticleDto article) {
+		List<ArticleTagArticleDto> articleTagList = tagArticleRepository.findByArticleId(article.getId());
+		Optional<ArticleTagDto> tagDtoOpt = null;
+		ArticleTagDto tagDto = null;
+
+		for (ArticleTagArticleDto articleTag : articleTagList) {
+			tagArticleRepository.delete(articleTag);
+
+			List<ArticleTagArticleDto> list = tagArticleRepository.findByTagId(articleTag.getTagId());
+
+			if (list.size() == 0) {
+				tagDtoOpt = tagRepository.findById(articleTag.getTagId());
+				if (tagDtoOpt.isPresent()) {
+					tagDto = tagDtoOpt.get();
+					tagRepository.delete(tagDto);
+				}
+			}
+		}
 	}
 
 	private Map<String, Object> articleResponse(ArticleData articleData) {
@@ -217,4 +240,3 @@ public class ArticleApi {
 		};
 	}
 }
-
