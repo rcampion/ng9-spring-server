@@ -174,20 +174,14 @@ public class ArticleApi {
 					tagArticleDto = new ArticleTagArticleDto();
 					tagArticleDto.setTagId(tagDto.getId());
 					tagArticleDto.setArticleId(article.getId());
-					tagArticleDto = tagArticleRepository.save(tagArticleDto);
-					
-					
+					tagArticleDto = tagArticleRepository.save(tagArticleDto);				
 				}
-			}
-			
-		}
-		
-		
+			}		
+		}	
 	}
 	
-	//@DeleteMapping
-	@RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 
+	@RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity deleteArticle(@PathVariable("id") Integer id) {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
