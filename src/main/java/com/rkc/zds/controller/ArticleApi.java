@@ -10,10 +10,12 @@ import com.rkc.zds.core.service.AuthorizationService;
 import com.rkc.zds.model.ArticleData;
 import com.rkc.zds.dto.ArticleCommentDto;
 import com.rkc.zds.dto.ArticleDto;
+import com.rkc.zds.dto.ArticleFavoriteDto;
 import com.rkc.zds.dto.ArticleTagDto;
 import com.rkc.zds.dto.ArticleTagArticleDto;
 import com.rkc.zds.dto.UserDto;
 import com.rkc.zds.repository.ArticleCommentRepository;
+import com.rkc.zds.repository.ArticleFavoriteRepository;
 import com.rkc.zds.repository.ArticleRepository;
 import com.rkc.zds.repository.ArticleTagArticleRepository;
 import com.rkc.zds.repository.ArticleTagRepository;
@@ -64,6 +66,9 @@ public class ArticleApi {
 	
 	@Autowired
 	ArticleCommentRepository articleCommentRepository;
+
+	@Autowired
+	ArticleFavoriteRepository favoritesRepository;
 	
 	@Autowired
 	private ArticleQueryService articleQueryService;
@@ -212,6 +217,8 @@ public class ArticleApi {
 			deleteTagsForArticle(article);
 			
 			deleteCommentsForArticle(article);
+			
+			deleteFavoritesForArticle(article);
 
 			articleRepository.delete(article);
 			return ResponseEntity.noContent().build();
@@ -226,6 +233,14 @@ public class ArticleApi {
 		}		
 	}
 
+	private void deleteFavoritesForArticle(ArticleDto article) {
+		List<ArticleFavoriteDto> list = favoritesRepository.findByArticleId(article.getId());
+		
+		for(ArticleFavoriteDto favorite:list) {
+			favoritesRepository.delete(favorite);
+		}		
+	}
+	
 	private void deleteTagsForArticle(ArticleDto article) {
 		List<ArticleTagArticleDto> articleTagList = tagArticleRepository.findByArticleId(article.getId());
 		Optional<ArticleTagDto> tagDtoOpt = null;
