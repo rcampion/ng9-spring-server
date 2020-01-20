@@ -48,7 +48,6 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "http://www.zdslogic-development.com:4200")
 @RestController
-//@RequestMapping(path = "/api/articles/{slug}")
 @RequestMapping(path = "/api/articles/")
 public class ArticleApi {
 
