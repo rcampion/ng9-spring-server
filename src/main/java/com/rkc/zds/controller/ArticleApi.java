@@ -217,11 +217,4 @@ public class ArticleApi {
 		};
 	}
 }
-/*
- * @Getter
- * 
- * @NoArgsConstructor
- * 
- * @JsonRootName("article") class UpdateArticleParam { private String title =
- * ""; private String body = ""; private String description = ""; }
- */
+
