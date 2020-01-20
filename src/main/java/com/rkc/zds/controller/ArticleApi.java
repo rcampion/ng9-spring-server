@@ -51,19 +51,19 @@ import java.util.Optional;
 //@RequestMapping(path = "/api/articles/{slug}")
 @RequestMapping(path = "/api/articles/")
 public class ArticleApi {
-	
+
 	@Autowired
 	UserRepository userRepository;
 
 	@Autowired
 	ArticleTagRepository tagRepository;
-	
+
 	@Autowired
 	ArticleTagArticleRepository tagArticleRepository;
-	
-	@Autowired	
+
+	@Autowired
 	private ArticleQueryService articleQueryService;
-	
+
 	private ArticleRepository articleRepository;
 
 	@Autowired
@@ -80,10 +80,10 @@ public class ArticleApi {
 		String userLogin = authentication.getName();
 
 		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
-		
+
 		UserDto user = null;
-		
-		if(userDto.isPresent()) {
+
+		if (userDto.isPresent()) {
 			user = userDto.get();
 		}
 
@@ -93,9 +93,9 @@ public class ArticleApi {
 	}
 
 	// @PutMapping
-	//puts are not working, 415 error, switched to post
-	@RequestMapping(value = "{id}", method = RequestMethod.POST, consumes = {
-			"application/json" }, produces = { "application/json" })
+	// puts are not working, 415 error, switched to post
+	@RequestMapping(value = "{id}", method = RequestMethod.POST, consumes = { "application/json" }, produces = {
+			"application/json" })
 	public ResponseEntity<?> updateArticle(@RequestBody String jsonString) {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -103,10 +103,10 @@ public class ArticleApi {
 		String userLogin = authentication.getName();
 
 		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
-		
+
 		UserDto user = null;
-		
-		if(userDto.isPresent()) {
+
+		if (userDto.isPresent()) {
 			user = userDto.get();
 		}
 
@@ -127,59 +127,60 @@ public class ArticleApi {
 			e.printStackTrace();
 		}
 
-		if(article.getTags()!=null) {
+		if (article.getTags() != null) {
 			processTags(article);
 		}
-		
+
 		Optional<ArticleDto> articleTemp = articleRepository.findById(article.getId());
 
 		ArticleDto articleDto = null;
 		if (articleTemp.isPresent()) {
 			articleDto = articleTemp.get();
-			
+
 			articleDto.setBody(article.getBody());
 			articleDto.setTitle(article.getTitle());
-			articleDto.setDescription(article.getDescription());			
+			articleDto.setDescription(article.getDescription());
 			Timestamp stamp = new Timestamp(new Date().getTime());
 
 			articleDto.setUpdatedAt(stamp);
 			articleDto = articleRepository.save(articleDto);
 		}
-		
+
 		final Integer articleId = article.getId();
-		
-        return ResponseEntity.ok(articleResponse(articleQueryService.findById(articleId, user).get()));
+
+		return ResponseEntity.ok(articleResponse(articleQueryService.findById(articleId, user).get()));
 
 	}
 
 	private void processTags(ArticleDto article) {
-		
+
 		String tags = article.getTags();
 		String[] array = tags.split("\\s+");
 		ArticleTagDto tagDto = null;
 		ArticleTagArticleDto tagArticleDto = null;
-		
+
 		List<ArticleTagArticleDto> articleTagList = null;
-		
-		for(String tag:array) {
-			tagDto = tagRepository.findByName(tag);
-			if(tagDto==null) {
-				tagDto = new ArticleTagDto();
-				tagDto.setName(tag);
-				tagDto = tagRepository.save(tagDto);
-			}
-			if(tagDto!=null) {
-				tagArticleDto = tagArticleRepository.findByTagIdAndArticleId(tagDto.getId(), article.getId());
-				if(tagArticleDto == null) {
-					tagArticleDto = new ArticleTagArticleDto();
-					tagArticleDto.setTagId(tagDto.getId());
-					tagArticleDto.setArticleId(article.getId());
-					tagArticleDto = tagArticleRepository.save(tagArticleDto);				
+
+		for (String tag : array) {
+			if (!tag.equals("")) {
+				tagDto = tagRepository.findByName(tag);
+				if (tagDto == null) {
+					tagDto = new ArticleTagDto();
+					tagDto.setName(tag);
+					tagDto = tagRepository.save(tagDto);
 				}
-			}		
-		}	
+				if (tagDto != null) {
+					tagArticleDto = tagArticleRepository.findByTagIdAndArticleId(tagDto.getId(), article.getId());
+					if (tagArticleDto == null) {
+						tagArticleDto = new ArticleTagArticleDto();
+						tagArticleDto.setTagId(tagDto.getId());
+						tagArticleDto.setArticleId(article.getId());
+						tagArticleDto = tagArticleRepository.save(tagArticleDto);
+					}
+				}
+			}
+		}
 	}
-	
 
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity deleteArticle(@PathVariable("id") Integer id) {
@@ -189,17 +190,16 @@ public class ArticleApi {
 		String userLogin = authentication.getName();
 
 		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
-		
+
 		UserDto user = null;
-		
-		if(userDto.isPresent()) {
+
+		if (userDto.isPresent()) {
 			user = userDto.get();
 		}
-		
-		
+
 		final UserDto temp = user;
-		
-		//return articleRepository.findBySlug(slug).map(article -> {
+
+		// return articleRepository.findBySlug(slug).map(article -> {
 		return articleRepository.findById(id).map(article -> {
 			if (!AuthorizationService.canWriteArticle(temp, article)) {
 				throw new NoAuthorizationException();
