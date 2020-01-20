@@ -8,10 +8,12 @@ import com.rkc.zds.api.exception.NoAuthorizationException;
 import com.rkc.zds.api.exception.ResourceNotFoundException;
 import com.rkc.zds.core.service.AuthorizationService;
 import com.rkc.zds.model.ArticleData;
+import com.rkc.zds.dto.ArticleCommentDto;
 import com.rkc.zds.dto.ArticleDto;
 import com.rkc.zds.dto.ArticleTagDto;
 import com.rkc.zds.dto.ArticleTagArticleDto;
 import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.repository.ArticleCommentRepository;
 import com.rkc.zds.repository.ArticleRepository;
 import com.rkc.zds.repository.ArticleTagArticleRepository;
 import com.rkc.zds.repository.ArticleTagRepository;
@@ -59,7 +61,10 @@ public class ArticleApi {
 
 	@Autowired
 	ArticleTagArticleRepository tagArticleRepository;
-
+	
+	@Autowired
+	ArticleCommentRepository articleCommentRepository;
+	
 	@Autowired
 	private ArticleQueryService articleQueryService;
 
@@ -205,10 +210,20 @@ public class ArticleApi {
 			}
 
 			deleteTagsForArticle(article);
+			
+			deleteCommentsForArticle(article);
 
 			articleRepository.delete(article);
 			return ResponseEntity.noContent().build();
 		}).orElseThrow(ResourceNotFoundException::new);
+	}
+
+	private void deleteCommentsForArticle(ArticleDto article) {
+		List<ArticleCommentDto> list = articleCommentRepository.findByArticleId(article.getId());
+		
+		for(ArticleCommentDto comment:list) {
+			articleCommentRepository.delete(comment);
+		}		
 	}
 
 	private void deleteTagsForArticle(ArticleDto article) {
