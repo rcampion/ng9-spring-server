@@ -1,11 +1,11 @@
 package com.rkc.zds.config.security;
 
-import com.rkc.zds.dto.UserDto;
 import com.rkc.zds.repository.UserRepository;
 import com.rkc.zds.config.security.hmac.HmacException;
 import com.rkc.zds.config.security.hmac.HmacSigner;
 import com.rkc.zds.config.security.hmac.HmacUtils;
 import com.rkc.zds.controller.AuthenticationController;
+import com.rkc.zds.entity.UserEntity;
 import com.rkc.zds.service.AuthenticationService;
 import com.rkc.zds.service.SecurityService;
 import com.rkc.zds.service.UserService;
@@ -91,7 +91,7 @@ public class XAuthTokenFilter extends GenericFilterBean{
                 
                 //UserDto userDTO = userRepository.findByUserName(login);
                 //UserDto userDTO = this.userService.findByUserName(login);
-                UserDto userDTO = this.securityService.findByUserName(login);
+                UserEntity userDTO = this.securityService.findByUserName(login);
                 
                 Assert.notNull(userDTO,"No user found with login: "+login);
 

@@ -5,13 +5,13 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.rkc.zds.dto.ArticleFollowDto;
+import com.rkc.zds.entity.ArticleFollowEntity;
 
-public interface ArticleFollowRepository extends JpaRepository<ArticleFollowDto, Integer> {
+public interface ArticleFollowRepository extends JpaRepository<ArticleFollowEntity, Integer> {
 
-	ArticleFollowDto findByUserIdAndFollowId(Integer userId, Integer followId);
+	ArticleFollowEntity findByUserIdAndFollowId(Integer userId, Integer followId);
 	
-	List<ArticleFollowDto> findByUserId(Integer userId);
+	List<ArticleFollowEntity> findByUserId(Integer userId);
 	
-	ArticleFollowDto save(ArticleFollowDto follow);
+	ArticleFollowEntity save(ArticleFollowEntity follow);
 }

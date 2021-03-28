@@ -1,8 +1,8 @@
 package com.rkc.zds.service;
 
 import com.rkc.zds.config.security.SecurityUser;
-import com.rkc.zds.dto.AuthorityDto;
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.AuthorityEntity;
+import com.rkc.zds.entity.UserEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import fr.redfroggy.hmac.mock.MockUsers;
@@ -29,7 +29,7 @@ public class HmacUserDetailsService implements UserDetailsService{
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 
-    	UserDto userDTO = userService.findByUserName(userName);
+    	UserEntity userDTO = userService.findByUserName(userName);
 
     	if (userDTO == null) {
             throw new UsernameNotFoundException("User "+userName+" not found");
@@ -37,7 +37,7 @@ public class HmacUserDetailsService implements UserDetailsService{
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         if(!userDTO.getAuthorities().isEmpty()){
-            for(AuthorityDto authority : userDTO.getAuthorities()){
+            for(AuthorityEntity authority : userDTO.getAuthorities()){
                 authorities.add(new SimpleGrantedAuthority(authority.getAuthority()));
             }
         }

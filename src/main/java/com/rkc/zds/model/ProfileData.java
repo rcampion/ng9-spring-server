@@ -1,13 +1,10 @@
 package com.rkc.zds.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProfileData {
 	
 	@JsonIgnore
@@ -16,15 +13,8 @@ public class ProfileData {
     private String bio;
     private String image;
     private boolean following;
-/*
-            ProfileData profileData = new ProfileData(
-                userData.getId(),
-                userData.getUsername(),
-                userData.getBio(),
-                userData.getImage(),
-                userRelationshipQueryService.isUserFollowing(currentUser.getId(), userData.getId()));
     
- */
+
 	public ProfileData(Integer id, String userName, String bio, String image, boolean following) {
 		this.id = id;
 		this.userName = userName;

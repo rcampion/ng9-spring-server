@@ -2,9 +2,9 @@ package com.rkc.zds.controller;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.rkc.zds.api.exception.InvalidRequestException;
+import com.rkc.zds.entity.UserEntity;
 import com.rkc.zds.model.UserWithToken;
 import com.rkc.zds.model.UserData;
-import com.rkc.zds.dto.UserDto;
 import com.rkc.zds.repository.UserRepository;
 import com.rkc.zds.service.UserQueryService;
 
@@ -32,15 +32,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://www.zdslogic-development.com:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(path = "/api/user")
-public class CurrentUserApi {
+public class CurrentUserController {
 	private UserQueryService userQueryService;
 	private UserRepository userRepository;
 
 	@Autowired
-	public CurrentUserApi(UserQueryService userQueryService, UserRepository userRepository) {
+	public CurrentUserController(UserQueryService userQueryService, UserRepository userRepository) {
 		this.userQueryService = userQueryService;
 		this.userRepository = userRepository;
 	}
@@ -55,9 +55,9 @@ public class CurrentUserApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 		
-		UserDto user = null;
+		UserEntity user = null;
 		
 		if(userDto.isPresent()) {
 			user = userDto.get();
@@ -70,7 +70,7 @@ public class CurrentUserApi {
 	}
 
 	@PutMapping
-	public ResponseEntity updateProfile(@AuthenticationPrincipal UserDto currentUser,
+	public ResponseEntity updateProfile(@AuthenticationPrincipal UserEntity currentUser,
 			@RequestHeader("Authorization") String token, @Valid @RequestBody UpdateUserParam updateUserParam,
 			BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
@@ -85,13 +85,13 @@ public class CurrentUserApi {
 		return ResponseEntity.ok(userResponse(new UserWithToken(userData, token.split(" ")[1])));
 	}
 
-	private void checkUniquenessOfUserNameAndEmail(UserDto currentUser, UpdateUserParam updateUserParam,
+	private void checkUniquenessOfUserNameAndEmail(UserEntity currentUser, UpdateUserParam updateUserParam,
 			BindingResult bindingResult) {
 		
-		UserDto byUserName = null;
+		UserEntity byUserName = null;
 		
 		if (!"".equals(updateUserParam.getUserName())) {
-			Optional<UserDto> userDto = userRepository.findByUserName(updateUserParam.getUserName());
+			Optional<UserEntity> userDto = userRepository.findByUserName(updateUserParam.getUserName());
 
 			if(userDto.isPresent()) {
 				byUserName = userDto.get();
@@ -103,7 +103,7 @@ public class CurrentUserApi {
 		}
 
 		if (!"".equals(updateUserParam.getEmail())) {
-			Optional<UserDto> byEmail = userRepository.findByEmail(updateUserParam.getEmail());
+			Optional<UserEntity> byEmail = userRepository.findByEmail(updateUserParam.getEmail());
 			if (byEmail.isPresent() && !byEmail.get().equals(currentUser)) {
 				bindingResult.rejectValue("email", "DUPLICATED", "email already exist");
 			}

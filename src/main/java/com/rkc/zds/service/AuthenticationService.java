@@ -4,8 +4,7 @@ import com.rkc.zds.config.security.SecurityProperties;
 import com.rkc.zds.config.security.SecurityUser;
 import com.rkc.zds.config.security.hmac.*;
 import com.rkc.zds.dto.LoginDto;
-import com.rkc.zds.dto.UserDto;
-
+import com.rkc.zds.entity.UserEntity;
 import com.rkc.zds.config.security.SecurityUtils;
 import com.rkc.zds.config.security.hmac.HmacUtils;
 
@@ -65,7 +64,7 @@ public class AuthenticationService {
 	 * @return UserDTO instance
 	 * @throws HmacException
 	 */
-	public UserDto authenticate(LoginDto loginDTO, HttpServletRequest request, HttpServletResponse response) throws HmacException {
+	public UserEntity authenticate(LoginDto loginDTO, HttpServletRequest request, HttpServletResponse response) throws HmacException {
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 				loginDTO.getLogin(), loginDTO.getPassword());
 		Authentication authentication = null;
@@ -95,7 +94,7 @@ public class AuthenticationService {
 		// Retrieve security user after authentication
 		UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.getLogin());
 
-		UserDto userDTO = userService.findByUserName(userDetails.getUsername());
+		UserEntity userDTO = userService.findByUserName(userDetails.getUsername());
 
 		// SecurityUser securityUser = (SecurityUser)
 		// userDetailsService.loadUserByUsername(loginDTO.getLogin());
@@ -128,7 +127,7 @@ public class AuthenticationService {
         // Jwt is generated using the secret defined in configuration file
         HmacToken hmacToken = SecurityUtils.getSignedToken(jwtSecret,loginDTO.getLogin(), SecurityService.JWT_TTL,customClaims);
 
-		for (UserDto userDto : userService.getUsers()) {
+		for (UserEntity userDto : userService.getUsers()) {
 			if (userDto.getId() == (securityUser.getId())) {
 				// Store in cache both private and public secrets
 				userDto.setPublicSecret(jwtSecret);
@@ -183,7 +182,7 @@ public class AuthenticationService {
 			// SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			User securityUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			// UserDto userDTO = userService.findById(securityUser.getId());
-			UserDto userDTO = userService.findByUserName(securityUser.getUsername());
+			UserEntity userDTO = userService.findByUserName(securityUser.getUsername());
 			if (userDTO != null) {
 				userDTO.setPublicSecret(null);
 			}
@@ -207,8 +206,8 @@ public class AuthenticationService {
 		SecurityContextHolder.getContext().setAuthentication(authToken);
 	}
 
-	public UserDto findByUserName(String login) {
-		UserDto userDTO = userService.findByUserName(login);
+	public UserEntity findByUserName(String login) {
+		UserEntity userDTO = userService.findByUserName(login);
 		return userDTO;
 	}
 

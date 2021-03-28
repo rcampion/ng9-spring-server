@@ -1,8 +1,8 @@
 package com.rkc.zds.service;
 
 import com.rkc.zds.model.CommentData;
-import com.rkc.zds.dto.ArticleCommentDto;
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.ArticleCommentEntity;
+import com.rkc.zds.entity.UserEntity;
 
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class CommentQueryService {
         this.userRelationshipQueryService = userRelationshipQueryService;
     }
 
-    public Optional<CommentData> findById(Integer id, UserDto user) {
+    public Optional<CommentData> findById(Integer id, UserEntity user) {
         CommentData commentData = commentReadService.findById(id, user);
         if (commentData == null) {
             return Optional.empty();
@@ -34,7 +34,7 @@ public class CommentQueryService {
         return Optional.ofNullable(commentData);
     }
 
-    public List<CommentData> findByArticleId(Integer articleId, UserDto user) {
+    public List<CommentData> findByArticleId(Integer articleId, UserEntity user) {
         List<CommentData> comments = commentReadService.findByArticleId(articleId);
 /*
         if (comments.size() > 0 && user != null) {
@@ -49,7 +49,7 @@ public class CommentQueryService {
         return comments;
     }
 
-	public Optional<ArticleCommentDto> findByArticleIdAndUserId(Integer articleId , Integer userId) {
+	public Optional<ArticleCommentEntity> findByArticleIdAndUserId(Integer articleId , Integer userId) {
 		return commentReadService.findByArticleIdAndUserId(articleId, userId);
 	}
 }

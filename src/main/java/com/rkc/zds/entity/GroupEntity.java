@@ -1,8 +1,13 @@
-package com.rkc.zds.dto;
+package com.rkc.zds.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the PCM_GROUP database table.
@@ -10,7 +15,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="PCM_GROUP")
-public class GroupDto implements Serializable {
+public class GroupEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -22,10 +27,10 @@ public class GroupDto implements Serializable {
 	@Column(name="GROUP_DESCRIPTION", nullable = false, length = 100)
 	private String groupDescription;
 
-    public GroupDto() {
+    public GroupEntity() {
     }
     
-	public GroupDto(int groupId, String groupName, String groupDescription) {
+	public GroupEntity(int groupId, String groupName, String groupDescription) {
 		super();
 		this.groupId = groupId;
 		this.groupName = groupName;
@@ -71,7 +76,7 @@ public class GroupDto implements Serializable {
 	        result = false;
 	    } // end if
 	    else{
-	        GroupDto otherGroup = (GroupDto)other;
+	        GroupEntity otherGroup = (GroupEntity)other;
 	        result = (groupId == (otherGroup.groupId));
 	    } // end else
 

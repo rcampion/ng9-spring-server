@@ -1,12 +1,5 @@
-package com.rkc.zds.dto;
+package com.rkc.zds.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.joda.time.DateTime;
-
-import java.util.UUID;
-import java.util.Date;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -18,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "PCM_ARTICLE_COMMENTS")
-public class ArticleCommentDto {
+public class ArticleCommentEntity {
 	@Id
 	@Column(name="ID", unique = true)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)	
@@ -31,16 +24,8 @@ public class ArticleCommentDto {
     private String body;
 	@Column(name="CREATED_AT")	
     private Timestamp createdAt;
-/*
-    public ArticleCommentDto(String body, Integer userId, Integer articleId) {
-        this.id = Integer.parseInt(UUID.randomUUID().toString());
-        this.body = body;
-        this.userId = userId;
-        this.articleId = articleId;
-        this.createdAt = new Date();
-    }
-*/    
-    public ArticleCommentDto() {
+   
+    public ArticleCommentEntity() {
 		// TODO Auto-generated constructor stub
 	}
 

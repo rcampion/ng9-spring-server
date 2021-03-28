@@ -8,7 +8,7 @@ import com.rkc.zds.config.security.hmac.HmacSigner;
 import com.rkc.zds.config.security.hmac.HmacToken;
 import com.rkc.zds.config.security.hmac.HmacUtils;
 import com.rkc.zds.dto.LoginDto;
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.UserEntity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -182,8 +182,8 @@ public class SecurityService {
 		SecurityContextHolder.getContext().setAuthentication(authToken);
 	}
 	
-	public UserDto findByUserName(String login) {
-		UserDto userDTO = userService.findByUserName(login);
+	public UserEntity findByUserName(String login) {
+		UserEntity userDTO = userService.findByUserName(login);
 		return userDTO;
 	}
 }

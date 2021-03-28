@@ -1,20 +1,21 @@
 package com.rkc.zds.service;
 
 import com.rkc.zds.core.user.FollowRelation;
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.UserEntity;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserMapper {
-    void insert(@Param("user") UserDto user);
+    void insert(@Param("user") UserEntity user);
 
-    UserDto findByUserName(@Param("userName") String userName);
-    UserDto findByEmail(@Param("email") String email);
+    UserEntity findByUserName(@Param("userName") String userName);
+    UserEntity findByEmail(@Param("email") String email);
 
-    UserDto findById(@Param("id") String id);
+    UserEntity findById(@Param("id") String id);
 
-    void update(@Param("user") UserDto user);
+    void update(@Param("user") UserEntity user);
 
     FollowRelation findRelation(@Param("userId") Integer userId, @Param("targetId") Integer targetId);
 

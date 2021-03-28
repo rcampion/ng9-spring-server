@@ -1,13 +1,14 @@
 package com.rkc.zds.core.service;
 
-import com.rkc.zds.dto.UserDto;
 import org.springframework.stereotype.Service;
+
+import com.rkc.zds.entity.UserEntity;
 
 import java.util.Optional;
 
 @Service
 public interface JwtService {
-    String toToken(UserDto user);
+    String toToken(UserEntity user);
 
     Optional<String> getSubFromToken(String token);
 }

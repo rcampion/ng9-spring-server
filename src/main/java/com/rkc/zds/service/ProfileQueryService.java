@@ -1,8 +1,8 @@
 package com.rkc.zds.service;
 
+import com.rkc.zds.entity.UserEntity;
 import com.rkc.zds.model.ProfileData;
 import com.rkc.zds.model.UserData;
-import com.rkc.zds.dto.UserDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class ProfileQueryService {
         this.userRelationshipQueryService = userRelationshipQueryService;
     }
 
-    public Optional<ProfileData> findByUserName(String userName, UserDto currentUser) {
+    public Optional<ProfileData> findByUserName(String userName, UserEntity currentUser) {
         UserData userData = userReadService.findByUserName(userName);
         if (userData == null) {
             return Optional.empty();

@@ -5,17 +5,17 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.rkc.zds.dto.ArticleCommentDto;
-import com.rkc.zds.dto.ArticleFavoriteDto;
+import com.rkc.zds.entity.ArticleCommentEntity;
+import com.rkc.zds.entity.ArticleFavoriteEntity;
 
-public interface  ArticleCommentRepository extends JpaRepository<ArticleCommentDto, Integer> {
+public interface  ArticleCommentRepository extends JpaRepository<ArticleCommentEntity, Integer> {
 
-	ArticleCommentDto save(ArticleCommentDto comment);
+	ArticleCommentEntity save(ArticleCommentEntity comment);
 
-    Optional<ArticleCommentDto> findByArticleIdAndUserId(Integer articleId, Integer id);
+    Optional<ArticleCommentEntity> findByArticleIdAndUserId(Integer articleId, Integer id);
 
-	List<ArticleCommentDto> findByArticleId(Integer articleId);
+	List<ArticleCommentEntity> findByArticleId(Integer articleId);
 
-	Optional<ArticleCommentDto> findByArticleIdAndId(Integer id, Integer commentId);
+	Optional<ArticleCommentEntity> findByArticleIdAndId(Integer id, Integer commentId);
 
 }

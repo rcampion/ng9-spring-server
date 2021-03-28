@@ -1,10 +1,7 @@
-package com.rkc.zds.dto;
+package com.rkc.zds.entity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,30 +14,37 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rkc.zds.dto.Profile;
 
 /**
  * The persistent class for the PCM_USERS database table.
  * 
  */
-// @Transactional
 @Entity
 @Table(name="PCM_USERS")
-public class UserDto implements java.io.Serializable  {
+public class UserEntity implements java.io.Serializable  {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name="ID", unique = true)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	
+    public UserEntity() {
+    }
+    
+	public UserEntity(String userName, String password, int enabled) {
+		this.userName = userName;
+		this.password = password;
+		this.enabled = enabled;
+	}
+
+	@Column(name="CONTACT_ID")
+	private Integer contactId;
 
 	@Column(name="LOGIN")
-    @NotEmpty
     private String login;
 	
 	@Column(name="USERNAME")
@@ -66,38 +70,17 @@ public class UserDto implements java.io.Serializable  {
 	
 	@Column(name="IMAGE")	
     private String image;
-
-    public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getBio() {
-		return bio;
-	}
-
-	public void setBio(String bio) {
-		this.bio = bio;
-	}
-
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
-
+	
+	@Column(name="ISLOGGEDIN")	
+    private int isLoggedIn;	
+	
 	@OneToMany(cascade = {CascadeType.ALL, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(nullable=true, name = "userName", referencedColumnName = "userName")
-	@ElementCollection(targetClass=AuthorityDto.class)
+	@ElementCollection(targetClass=AuthorityEntity.class)
 
     @JsonProperty("authorities")
 	//private Set<AuthorityDto> authorities = new HashSet<AuthorityDto>(0);
-    private List<AuthorityDto> authorities = new ArrayList<AuthorityDto>();
+    private List<AuthorityEntity> authorities = new ArrayList<AuthorityEntity>();
 
     @JsonIgnore
 	@Column(name="PUBLIC_SECRET")
@@ -108,15 +91,6 @@ public class UserDto implements java.io.Serializable  {
     private String privateSecret;
 
     private Profile profile;
-    
-    public UserDto() {
-    }
-    
-	public UserDto(String userName, String password, int enabled) {
-		this.userName = userName;
-		this.password = password;
-		this.enabled = enabled;
-	}
 
 	public Integer getId() {
 		return id;
@@ -173,6 +147,46 @@ public class UserDto implements java.io.Serializable  {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getBio() {
+		return bio;
+	}
+
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+	
+    public int getIsLoggedIn() {
+		return isLoggedIn;
+	}
+
+	public void setIsLoggedIn(int isLoggedIn) {
+		this.isLoggedIn = isLoggedIn;
+	}
+	
+	public Integer getContactId() {
+		return contactId;
+	}
+
+	public void setContactId(Integer contactId) {
+		this.contactId = contactId;
+	}
 /*	
 	public Set<AuthorityDto> getAuthorities() {
 		return this.authorities;
@@ -183,12 +197,12 @@ public class UserDto implements java.io.Serializable  {
 	}
 */
     @JsonIgnore
-    public List<AuthorityDto> getAuthorities() {
+    public List<AuthorityEntity> getAuthorities() {
 		return authorities;
 	}
     
     @JsonIgnore
-	public void setAuthorities(List<AuthorityDto> authorities) {
+	public void setAuthorities(List<AuthorityEntity> authorities) {
 		this.authorities = authorities;
 	}
 
@@ -265,7 +279,6 @@ public class UserDto implements java.io.Serializable  {
 		this.password = password;
 		this.bio = bio;
 		this.image = image;
-		
 	}
 	
 /*

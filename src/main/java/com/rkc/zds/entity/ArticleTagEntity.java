@@ -1,4 +1,4 @@
-package com.rkc.zds.dto;
+package com.rkc.zds.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "PCM_ARTICLE_TAG_ARTICLES")
-public class ArticleTagArticleDto implements java.io.Serializable {
+@Table(name = "PCM_ARTICLE_TAGS")
+public class ArticleTagEntity implements java.io.Serializable {
 	/**
 	 * 
 	 */
@@ -19,12 +19,8 @@ public class ArticleTagArticleDto implements java.io.Serializable {
 	@Column(name="ID", unique = true)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	
-	@Column(name="TAG_ID")		
-	private Integer tagId;
-
-	@Column(name="ARTICLE_ID")		
-	private Integer articleId;
+	@Column(name="NAME")		
+	private String name;
 	
 	public Integer getId() {
 		return id;
@@ -32,17 +28,10 @@ public class ArticleTagArticleDto implements java.io.Serializable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getTagId() {
-		return tagId;
+	public String getName() {
+		return name;
 	}
-	public void setTagId(Integer tagId) {
-		this.tagId = tagId;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public Integer getArticleId() {
-		return articleId;
-	}
-	public void setArticleId(Integer articleId) {
-		this.articleId = articleId;
-	}
-
 }

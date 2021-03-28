@@ -8,12 +8,12 @@ import com.rkc.zds.api.exception.NoAuthorizationException;
 import com.rkc.zds.api.exception.ResourceNotFoundException;
 import com.rkc.zds.core.service.AuthorizationService;
 import com.rkc.zds.model.ArticleData;
-import com.rkc.zds.dto.ArticleCommentDto;
-import com.rkc.zds.dto.ArticleDto;
-import com.rkc.zds.dto.ArticleFavoriteDto;
-import com.rkc.zds.dto.ArticleTagDto;
-import com.rkc.zds.dto.ArticleTagArticleDto;
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.ArticleCommentEntity;
+import com.rkc.zds.entity.ArticleEntity;
+import com.rkc.zds.entity.ArticleFavoriteEntity;
+import com.rkc.zds.entity.ArticleTagArticleEntity;
+import com.rkc.zds.entity.ArticleTagEntity;
+import com.rkc.zds.entity.UserEntity;
 import com.rkc.zds.repository.ArticleCommentRepository;
 import com.rkc.zds.repository.ArticleFavoriteRepository;
 import com.rkc.zds.repository.ArticleRepository;
@@ -50,10 +50,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://www.zdslogic-development.com:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(path = "/api/articles/")
-public class ArticleApi {
+public class ArticleController {
 
 	@Autowired
 	UserRepository userRepository;
@@ -76,7 +76,7 @@ public class ArticleApi {
 	private ArticleRepository articleRepository;
 
 	@Autowired
-	public ArticleApi(ArticleQueryService articleQueryService, ArticleRepository articleRepository) {
+	public ArticleController(ArticleQueryService articleQueryService, ArticleRepository articleRepository) {
 		this.articleQueryService = articleQueryService;
 		this.articleRepository = articleRepository;
 	}
@@ -88,9 +88,9 @@ public class ArticleApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 
-		UserDto user = null;
+		UserEntity user = null;
 
 		if (userDto.isPresent()) {
 			user = userDto.get();
@@ -111,20 +111,20 @@ public class ArticleApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 
-		UserDto user = null;
+		UserEntity user = null;
 
 		if (userDto.isPresent()) {
 			user = userDto.get();
 		}
 
-		ArticleDto article = new ArticleDto();
+		ArticleEntity article = new ArticleEntity();
 
 		ObjectMapper mapper = new ObjectMapper();
 
 		try {
-			article = mapper.readValue(jsonString, ArticleDto.class);
+			article = mapper.readValue(jsonString, ArticleEntity.class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -140,9 +140,9 @@ public class ArticleApi {
 			processTags(article);
 		}
 
-		Optional<ArticleDto> articleTemp = articleRepository.findById(article.getId());
+		Optional<ArticleEntity> articleTemp = articleRepository.findById(article.getId());
 
-		ArticleDto articleDto = null;
+		ArticleEntity articleDto = null;
 		if (articleTemp.isPresent()) {
 			articleDto = articleTemp.get();
 
@@ -161,27 +161,27 @@ public class ArticleApi {
 
 	}
 
-	private void processTags(ArticleDto article) {
+	private void processTags(ArticleEntity article) {
 
 		String tags = article.getTags();
 		String[] array = tags.split("\\s+");
-		ArticleTagDto tagDto = null;
-		ArticleTagArticleDto tagArticleDto = null;
+		ArticleTagEntity tagDto = null;
+		ArticleTagArticleEntity tagArticleDto = null;
 
-		List<ArticleTagArticleDto> articleTagList = null;
+		List<ArticleTagArticleEntity> articleTagList = null;
 
 		for (String tag : array) {
 			if (!tag.equals("")) {
 				tagDto = tagRepository.findByName(tag);
 				if (tagDto == null) {
-					tagDto = new ArticleTagDto();
+					tagDto = new ArticleTagEntity();
 					tagDto.setName(tag);
 					tagDto = tagRepository.save(tagDto);
 				}
 				if (tagDto != null) {
 					tagArticleDto = tagArticleRepository.findByTagIdAndArticleId(tagDto.getId(), article.getId());
 					if (tagArticleDto == null) {
-						tagArticleDto = new ArticleTagArticleDto();
+						tagArticleDto = new ArticleTagArticleEntity();
 						tagArticleDto.setTagId(tagDto.getId());
 						tagArticleDto.setArticleId(article.getId());
 						tagArticleDto = tagArticleRepository.save(tagArticleDto);
@@ -198,15 +198,15 @@ public class ArticleApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 
-		UserDto user = null;
+		UserEntity user = null;
 
 		if (userDto.isPresent()) {
 			user = userDto.get();
 		}
 
-		final UserDto temp = user;
+		final UserEntity temp = user;
 
 		// return articleRepository.findBySlug(slug).map(article -> {
 		return articleRepository.findById(id).map(article -> {
@@ -225,31 +225,31 @@ public class ArticleApi {
 		}).orElseThrow(ResourceNotFoundException::new);
 	}
 
-	private void deleteCommentsForArticle(ArticleDto article) {
-		List<ArticleCommentDto> list = articleCommentRepository.findByArticleId(article.getId());
+	private void deleteCommentsForArticle(ArticleEntity article) {
+		List<ArticleCommentEntity> list = articleCommentRepository.findByArticleId(article.getId());
 		
-		for(ArticleCommentDto comment:list) {
+		for(ArticleCommentEntity comment:list) {
 			articleCommentRepository.delete(comment);
 		}		
 	}
 
-	private void deleteFavoritesForArticle(ArticleDto article) {
-		List<ArticleFavoriteDto> list = favoritesRepository.findByArticleId(article.getId());
+	private void deleteFavoritesForArticle(ArticleEntity article) {
+		List<ArticleFavoriteEntity> list = favoritesRepository.findByArticleId(article.getId());
 		
-		for(ArticleFavoriteDto favorite:list) {
+		for(ArticleFavoriteEntity favorite:list) {
 			favoritesRepository.delete(favorite);
 		}		
 	}
 	
-	private void deleteTagsForArticle(ArticleDto article) {
-		List<ArticleTagArticleDto> articleTagList = tagArticleRepository.findByArticleId(article.getId());
-		Optional<ArticleTagDto> tagDtoOpt = null;
-		ArticleTagDto tagDto = null;
+	private void deleteTagsForArticle(ArticleEntity article) {
+		List<ArticleTagArticleEntity> articleTagList = tagArticleRepository.findByArticleId(article.getId());
+		Optional<ArticleTagEntity> tagDtoOpt = null;
+		ArticleTagEntity tagDto = null;
 
-		for (ArticleTagArticleDto articleTag : articleTagList) {
+		for (ArticleTagArticleEntity articleTag : articleTagList) {
 			tagArticleRepository.delete(articleTag);
 
-			List<ArticleTagArticleDto> list = tagArticleRepository.findByTagId(articleTag.getTagId());
+			List<ArticleTagArticleEntity> list = tagArticleRepository.findByTagId(articleTag.getTagId());
 
 			if (list.size() == 0) {
 				tagDtoOpt = tagRepository.findById(articleTag.getTagId());

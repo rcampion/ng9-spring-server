@@ -35,9 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rkc.zds.dto.ContactDto;
-import com.rkc.zds.dto.EMailDto;
-import com.rkc.zds.dto.PhoneDto;
+import com.rkc.zds.entity.ContactEntity;
+import com.rkc.zds.entity.EMailEntity;
+import com.rkc.zds.entity.PhoneEntity;
 import com.rkc.zds.model.EMailSend;
 import com.rkc.zds.rsql.CustomRsqlVisitor;
 import com.rkc.zds.service.ContactService;
@@ -49,7 +49,7 @@ import com.rkc.zds.util.SearchCriteria;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 
-@CrossOrigin(origins = "http://www.zdslogic-development.com:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value = "/api/contact")
 public class ContactController {
@@ -74,29 +74,29 @@ public class ContactController {
 	private int maxResults;
 
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Page<ContactDto>> findAllContacts(Pageable pageable, HttpServletRequest req) {
-		Page<ContactDto> page = contactService.findContacts(pageable);
-		ResponseEntity<Page<ContactDto>> response = new ResponseEntity<>(page, HttpStatus.OK);
+	public ResponseEntity<Page<ContactEntity>> findAllContacts(Pageable pageable, HttpServletRequest req) {
+		Page<ContactEntity> page = contactService.findContacts(pageable);
+		ResponseEntity<Page<ContactEntity>> response = new ResponseEntity<>(page, HttpStatus.OK);
 		return response;
 	}
 	
 	@RequestMapping(value = "/group/{groupId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Page<ContactDto>> findFilteredContacts(@PathVariable int groupId, Pageable pageable, HttpServletRequest req) {
-		Page<ContactDto> page = contactService.findFilteredContacts(pageable, groupId);
-		ResponseEntity<Page<ContactDto>> response = new ResponseEntity<>(page, HttpStatus.OK);
+	public ResponseEntity<Page<ContactEntity>> findFilteredContacts(@PathVariable int groupId, Pageable pageable, HttpServletRequest req) {
+		Page<ContactEntity> page = contactService.findFilteredContacts(pageable, groupId);
+		ResponseEntity<Page<ContactEntity>> response = new ResponseEntity<>(page, HttpStatus.OK);
 		return response;
 	}
 	
 	@RequestMapping(value = "/email/{contactId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Page<EMailDto>> findEMails(@PathVariable int contactId, Pageable pageable, HttpServletRequest req) {
-		Page<EMailDto> page = emailService.findEMails(pageable, contactId);
-		ResponseEntity<Page<EMailDto>> response = new ResponseEntity<>(page, HttpStatus.OK);
+	public ResponseEntity<Page<EMailEntity>> findEMails(@PathVariable int contactId, Pageable pageable, HttpServletRequest req) {
+		Page<EMailEntity> page = emailService.findEMails(pageable, contactId);
+		ResponseEntity<Page<EMailEntity>> response = new ResponseEntity<>(page, HttpStatus.OK);
 		return response;
 	}
 	
 	@RequestMapping(value = "/email/email/{emailId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<EMailDto>  getEmail(@PathVariable int emailId) {
-		EMailDto email = emailService.getEMail(emailId);
+	public ResponseEntity<EMailEntity>  getEmail(@PathVariable int emailId) {
+		EMailEntity email = emailService.getEMail(emailId);
 		return new ResponseEntity<>(email, HttpStatus.OK);
 	}
 	
@@ -107,9 +107,9 @@ public class ContactController {
 
 		ObjectMapper mapper = new ObjectMapper();
 
-		EMailDto emailDTO = new EMailDto();
+		EMailEntity emailDTO = new EMailEntity();
 		try {
-			emailDTO = mapper.readValue(jsonString, EMailDto.class);
+			emailDTO = mapper.readValue(jsonString, EMailEntity.class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -137,9 +137,9 @@ public class ContactController {
 	public void updateEMail(@RequestBody String jsonString) {
 		ObjectMapper mapper = new ObjectMapper();
 
-		EMailDto email = new EMailDto();
+		EMailEntity email = new EMailEntity();
 		try {
-			email = mapper.readValue(jsonString, EMailDto.class);
+			email = mapper.readValue(jsonString, EMailEntity.class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -180,15 +180,15 @@ public class ContactController {
 	}
 	
 	@RequestMapping(value = "/phone/{contactId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Page<PhoneDto>> findPhones(@PathVariable int contactId, Pageable pageable, HttpServletRequest req) {
-		Page<PhoneDto> page = phoneService.findPhones(pageable, contactId);
-		ResponseEntity<Page<PhoneDto>> response = new ResponseEntity<>(page, HttpStatus.OK);
+	public ResponseEntity<Page<PhoneEntity>> findPhones(@PathVariable int contactId, Pageable pageable, HttpServletRequest req) {
+		Page<PhoneEntity> page = phoneService.findPhones(pageable, contactId);
+		ResponseEntity<Page<PhoneEntity>> response = new ResponseEntity<>(page, HttpStatus.OK);
 		return response;
 	}
 	
 	@RequestMapping(value = "/phone/phone/{phoneId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PhoneDto>  getPhone(@PathVariable int phoneId) {
-		PhoneDto phone = phoneService.getPhone(phoneId);
+	public ResponseEntity<PhoneEntity>  getPhone(@PathVariable int phoneId) {
+		PhoneEntity phone = phoneService.getPhone(phoneId);
 		return new ResponseEntity<>(phone, HttpStatus.OK);
 	}
 	
@@ -199,9 +199,9 @@ public class ContactController {
 
 		ObjectMapper mapper = new ObjectMapper();
 
-		PhoneDto phoneDTO = new PhoneDto();
+		PhoneEntity phoneDTO = new PhoneEntity();
 		try {
-			phoneDTO = mapper.readValue(jsonString, PhoneDto.class);
+			phoneDTO = mapper.readValue(jsonString, PhoneEntity.class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -229,9 +229,9 @@ public class ContactController {
 	public void updatePhone(@RequestBody String jsonString) {
 		ObjectMapper mapper = new ObjectMapper();
 
-		PhoneDto phone = new PhoneDto();
+		PhoneEntity phone = new PhoneEntity();
 		try {
-			phone = mapper.readValue(jsonString, PhoneDto.class);
+			phone = mapper.readValue(jsonString, PhoneEntity.class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -248,17 +248,17 @@ public class ContactController {
 	}
 		
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ContactDto> getContact(@PathVariable int id, HttpServletRequest req) {
-		ContactDto contact = contactService.getContact(id);
+	public ResponseEntity<ContactEntity> getContact(@PathVariable int id, HttpServletRequest req) {
+		ContactEntity contact = contactService.getContact(id);
 		return new ResponseEntity<>(contact, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Page<ContactDto>> findAllByRsql(Pageable pageable, @RequestParam(value = "search") String search) {
+	public ResponseEntity<Page<ContactEntity>> findAllByRsql(Pageable pageable, @RequestParam(value = "search") String search) {
 	    Node rootNode = new RSQLParser().parse(search);
-	    Specification<ContactDto> spec = rootNode.accept(new CustomRsqlVisitor<ContactDto>());
+	    Specification<ContactEntity> spec = rootNode.accept(new CustomRsqlVisitor<ContactEntity>());
 	    //return dao.findAll(spec);
-		Page<ContactDto> page = contactService.searchContacts(pageable, spec);
+		Page<ContactEntity> page = contactService.searchContacts(pageable, spec);
 		return new ResponseEntity<>(page, HttpStatus.OK);
 	}
     
@@ -273,9 +273,9 @@ public class ContactController {
 		
 		ObjectMapper mapper = new ObjectMapper();
 
-		ContactDto contactDTO = new ContactDto();
+		ContactEntity contactDTO = new ContactEntity();
 		try {
-			contactDTO = mapper.readValue(jsonString, ContactDto.class);
+			contactDTO = mapper.readValue(jsonString, ContactEntity.class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -296,9 +296,9 @@ public class ContactController {
 	public void updateContact(@RequestBody String jsonString) {
 		ObjectMapper mapper = new ObjectMapper();
 
-		ContactDto contact = new ContactDto();
+		ContactEntity contact = new ContactEntity();
 		try {
-			contact = mapper.readValue(jsonString, ContactDto.class);
+			contact = mapper.readValue(jsonString, ContactEntity.class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

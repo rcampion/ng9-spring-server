@@ -12,8 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.rkc.zds.dto.ContactDto;
-import com.rkc.zds.dto.UserContactDto;
+import com.rkc.zds.entity.ContactEntity;
+import com.rkc.zds.entity.UserContactEntity;
 import com.rkc.zds.repository.ContactRepository;
 import com.rkc.zds.repository.UserContactsRepository;
 import com.rkc.zds.service.UserContactsService;
@@ -28,46 +28,46 @@ public class UserContactsServiceImpl implements UserContactsService {
 	private UserContactsRepository userContactsRepo;
 
 	@Override
-	public Page<UserContactDto> findUserContacts(Pageable pageable, int id) {
+	public Page<UserContactEntity> findUserContacts(Pageable pageable, int id) {
 
-		Page<UserContactDto> page = userContactsRepo.findByUserId(pageable, id);
+		Page<UserContactEntity> page = userContactsRepo.findByUserId(pageable, id);
 
 		return page;
 	}
 
-    public List<UserContactDto> getAllUserContacts(){
-    	List<UserContactDto> list = userContactsRepo.findAll();
+    public List<UserContactEntity> getAllUserContacts(){
+    	List<UserContactEntity> list = userContactsRepo.findAll();
     	return list;
     }
     
 	@Override
-	public List<UserContactDto> findAllUserContacts(int userId) {
+	public List<UserContactEntity> findAllUserContacts(int userId) {
 
-		List<UserContactDto> list = userContactsRepo.findByUserId(userId);
+		List<UserContactEntity> list = userContactsRepo.findByUserId(userId);
 
 		return list;
 	}
 
 	@Override
-	public Page<ContactDto> findFilteredContacts(Pageable pageable, int userId) {
+	public Page<ContactEntity> findFilteredContacts(Pageable pageable, int userId) {
 
-		List<ContactDto> contacts = contactRepo.findAll();
+		List<ContactEntity> contacts = contactRepo.findAll();
 
-		List<UserContactDto> userContactsList = userContactsRepo.findByUserId(userId);
+		List<UserContactEntity> userContactsList = userContactsRepo.findByUserId(userId);
 
-		List<ContactDto> testList = new ArrayList<ContactDto>();
+		List<ContactEntity> testList = new ArrayList<ContactEntity>();
 
-		List<ContactDto> filteredList = new ArrayList<ContactDto>();
+		List<ContactEntity> filteredList = new ArrayList<ContactEntity>();
 
 		// build member list of Contacts
-		Optional<ContactDto> contact;
-		for (UserContactDto element : userContactsList) {
+		Optional<ContactEntity> contact;
+		for (UserContactEntity element : userContactsList) {
 			contact = contactRepo.findById(element.getContactId());
 			testList.add(contact.get());
 		}
 
 		// check member list of Contacts
-		for (ContactDto element : contacts) {
+		for (ContactEntity element : contacts) {
 			// if the contact is in the members list, ignore it
 			if (!testList.contains(element)) {
 				filteredList.add(element);
@@ -81,7 +81,7 @@ public class UserContactsServiceImpl implements UserContactsService {
 
 		PageRequest pageRequest = PageRequest.of(0, size);
 
-		PageImpl<ContactDto> page = new PageImpl<ContactDto>(filteredList, pageRequest, size);
+		PageImpl<ContactEntity> page = new PageImpl<ContactEntity>(filteredList, pageRequest, size);
 
 		return page;
 	}
@@ -91,12 +91,12 @@ public class UserContactsServiceImpl implements UserContactsService {
 	}
 
 	@Override
-	public void addUserContact(UserContactDto userContact) {
+	public void addUserContact(UserContactEntity userContact) {
 		// checking for duplicates
-		List<UserContactDto> list = userContactsRepo.findByUserId(userContact.getUserId());
+		List<UserContactEntity> list = userContactsRepo.findByUserId(userContact.getUserId());
 
 		// return if duplicate found
-		for (UserContactDto element : list) {
+		for (UserContactEntity element : list) {
 			if (element.getContactId() == userContact.getContactId()) {
 				return;
 			}
@@ -106,7 +106,7 @@ public class UserContactsServiceImpl implements UserContactsService {
 	}
 
 	@Override
-	public void saveUserContact(UserContactDto userContact) {
+	public void saveUserContact(UserContactEntity userContact) {
 
 		userContactsRepo.save(userContact);
 	}

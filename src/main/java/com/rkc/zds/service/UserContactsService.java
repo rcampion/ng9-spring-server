@@ -6,22 +6,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rkc.zds.dto.ContactDto;
-import com.rkc.zds.dto.UserContactDto;
+import com.rkc.zds.entity.ContactEntity;
+import com.rkc.zds.entity.UserContactEntity;
 
 public interface UserContactsService {
-    Page<UserContactDto> findUserContacts(Pageable pageable, int userId);
+    Page<UserContactEntity> findUserContacts(Pageable pageable, int userId);
 
-    Page<ContactDto> findFilteredContacts(Pageable pageable, int userId);    
+    Page<ContactEntity> findFilteredContacts(Pageable pageable, int userId);    
 
-    List<UserContactDto> findAllUserContacts(int userId);
+    List<UserContactEntity> findAllUserContacts(int userId);
     
-    List<UserContactDto> getAllUserContacts();
+    List<UserContactEntity> getAllUserContacts();
 
     // @Transactional    
-    public void addUserContact(UserContactDto userContact);
+    public void addUserContact(UserContactEntity userContact);
     
-    public void saveUserContact(UserContactDto userContact); 
+    public void saveUserContact(UserContactEntity userContact); 
     
     // @Transactional  
 	void deleteUserContact(int id);

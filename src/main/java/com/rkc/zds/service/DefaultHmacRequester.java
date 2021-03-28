@@ -1,7 +1,7 @@
 package com.rkc.zds.service;
 
 import com.rkc.zds.config.security.hmac.HmacRequester;
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.UserEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class DefaultHmacRequester implements HmacRequester{
 
     @Override
     public String getPublicSecret(String iss) {
-        UserDto userDTO = userService.findById(Integer.valueOf(iss));
+        UserEntity userDTO = userService.findById(Integer.valueOf(iss));
         if(userDTO != null){
             return userDTO.getPublicSecret();
         }

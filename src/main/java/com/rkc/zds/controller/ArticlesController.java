@@ -8,13 +8,13 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rkc.zds.api.exception.InvalidRequestException;
-import com.rkc.zds.dto.ArticleDto;
-import com.rkc.zds.dto.ArticleTagArticleDto;
-import com.rkc.zds.dto.ArticleTagDto;
-import com.rkc.zds.dto.ContactDto;
-import com.rkc.zds.dto.GroupMemberDto;
 import com.rkc.zds.dto.GroupMemberElementDto;
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.ArticleEntity;
+import com.rkc.zds.entity.ArticleTagArticleEntity;
+import com.rkc.zds.entity.ArticleTagEntity;
+import com.rkc.zds.entity.ContactEntity;
+import com.rkc.zds.entity.GroupMemberEntity;
+import com.rkc.zds.entity.UserEntity;
 import com.rkc.zds.model.ArticleData;
 import com.rkc.zds.model.ArticleDataList;
 import com.rkc.zds.repository.ArticleRepository;
@@ -57,10 +57,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://www.zdslogic-development.com:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(path = "/api/articles")
-public class ArticlesApi {
+public class ArticlesController {
 	private ArticleRepository articleRepository;
 	private ArticleQueryService articleQueryService;
 	private ArticleReadService articleReadService;
@@ -75,7 +75,7 @@ public class ArticlesApi {
 	ArticleTagArticleRepository tagArticleRepository;
 
 	@Autowired
-	public ArticlesApi(ArticleRepository articleRepository, ArticleQueryService articleQueryService,
+	public ArticlesController(ArticleRepository articleRepository, ArticleQueryService articleQueryService,
 			ArticleReadService articleReadService) {
 		this.articleRepository = articleRepository;
 		this.articleQueryService = articleQueryService;
@@ -91,18 +91,18 @@ public class ArticlesApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 
-		ArticleDto article = new ArticleDto();
+		ArticleEntity article = new ArticleEntity();
 
 		ObjectMapper mapper = new ObjectMapper();
 
-		UserDto user = null;
+		UserEntity user = null;
 		if (userDto.isPresent()) {
 			user = userDto.get();
 
 			try {
-				article = mapper.readValue(jsonString, ArticleDto.class);
+				article = mapper.readValue(jsonString, ArticleEntity.class);
 			} catch (JsonParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -128,7 +128,7 @@ public class ArticlesApi {
 			}
 
 			final Integer articleId = article.getId();
-			final UserDto temp = user;
+			final UserEntity temp = user;
 
 			return ResponseEntity.ok(new HashMap<String, Object>() {
 				{
@@ -140,27 +140,27 @@ public class ArticlesApi {
 		return ResponseEntity.ok(HttpStatus.NO_CONTENT);
 	}
 
-	private void processTags(ArticleDto article) {
+	private void processTags(ArticleEntity article) {
 
 		String tags = article.getTags();
 		String[] array = tags.split("\\s+");
-		ArticleTagDto tagDto = null;
-		ArticleTagArticleDto tagArticleDto = null;
+		ArticleTagEntity tagDto = null;
+		ArticleTagArticleEntity tagArticleDto = null;
 
-		List<ArticleTagArticleDto> articleTagList = null;
+		List<ArticleTagArticleEntity> articleTagList = null;
 
 		for (String tag : array) {
 			if (!tag.equals("")) {
 				tagDto = tagRepository.findByName(tag);
 				if (tagDto == null) {
-					tagDto = new ArticleTagDto();
+					tagDto = new ArticleTagEntity();
 					tagDto.setName(tag);
 					tagDto = tagRepository.save(tagDto);
 				}
 				if (tagDto != null) {
 					tagArticleDto = tagArticleRepository.findByTagIdAndArticleId(tagDto.getId(), article.getId());
 					if (tagArticleDto == null) {
-						tagArticleDto = new ArticleTagArticleDto();
+						tagArticleDto = new ArticleTagArticleEntity();
 						tagArticleDto.setTagId(tagDto.getId());
 						tagArticleDto.setArticleId(article.getId());
 						tagArticleDto = tagArticleRepository.save(tagArticleDto);
@@ -182,9 +182,9 @@ public class ArticlesApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 
-		UserDto user = null;
+		UserEntity user = null;
 
 		if (userDto.isPresent()) {
 			user = userDto.get();
@@ -212,19 +212,19 @@ public class ArticlesApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 
-		UserDto user = null;
+		UserEntity user = null;
 
 		if (userDto.isPresent()) {
 			user = userDto.get();
 		}
 
-		Page<ArticleDto> pageList = null;
+		Page<ArticleEntity> pageList = null;
 		if (author != null) {
-			Optional<UserDto> authorDto = userRepository.findByUserName(author);
+			Optional<UserEntity> authorDto = userRepository.findByUserName(author);
 
-			UserDto userDtoX = null;
+			UserEntity userDtoX = null;
 
 			if (authorDto.isPresent()) {
 				userDtoX = authorDto.get();
@@ -232,9 +232,9 @@ public class ArticlesApi {
 
 			pageList = articleReadService.findByUserId(pageable, userDtoX.getId());
 		} else if (favoritedBy != null) {
-			Optional<UserDto> authorDto = userRepository.findByUserName(favoritedBy);
+			Optional<UserEntity> authorDto = userRepository.findByUserName(favoritedBy);
 
-			UserDto userDtoX = null;
+			UserEntity userDtoX = null;
 
 			if (authorDto.isPresent()) {
 				userDtoX = authorDto.get();

@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rkc.zds.dto.ContactDto;
-import com.rkc.zds.dto.GroupMemberDto;
 import com.rkc.zds.dto.GroupMemberElementDto;
+import com.rkc.zds.entity.ContactEntity;
+import com.rkc.zds.entity.GroupMemberEntity;
 import com.rkc.zds.service.ContactService;
 import com.rkc.zds.service.GroupMemberService;
 
-@CrossOrigin(origins = "http://www.zdslogic-development.com:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value = "/api/group/member")
 public class GroupMemberController {
@@ -39,13 +39,13 @@ public class GroupMemberController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<GroupMemberElementDto>> getGroupMembers(@PathVariable int id, Pageable pageable,
 			HttpServletRequest req) {
-		Page<GroupMemberDto> groupMembersPage = groupMemberService.findGroupMembers(pageable, id);
+		Page<GroupMemberEntity> groupMembersPage = groupMemberService.findGroupMembers(pageable, id);
 
-		List<GroupMemberDto> contents = groupMembersPage.getContent();
+		List<GroupMemberEntity> contents = groupMembersPage.getContent();
 		List<GroupMemberElementDto> memberList = new ArrayList<GroupMemberElementDto>();
 
-		ContactDto contact;
-		for (GroupMemberDto element : contents) {
+		ContactEntity contact;
+		for (GroupMemberEntity element : contents) {
 			contact = contactService.getContact(element.getContactId());
 			//ignore contacts that may have been deleted
 			if (contact != null) {
@@ -74,15 +74,15 @@ public class GroupMemberController {
 	}
 	
 	@RequestMapping(value = "/filtered/{groupId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Page<ContactDto>> findFilteredContacts(@PathVariable int groupId, Pageable pageable, HttpServletRequest req) {
-		Page<ContactDto> page = groupMemberService.findFilteredContacts(pageable, groupId);
-		ResponseEntity<Page<ContactDto>> response = new ResponseEntity<>(page, HttpStatus.OK);
+	public ResponseEntity<Page<ContactEntity>> findFilteredContacts(@PathVariable int groupId, Pageable pageable, HttpServletRequest req) {
+		Page<ContactEntity> page = groupMemberService.findFilteredContacts(pageable, groupId);
+		ResponseEntity<Page<ContactEntity>> response = new ResponseEntity<>(page, HttpStatus.OK);
 		return response;
 	}
 	
 	@RequestMapping(value = "/{groupId}/{contactId}", method = RequestMethod.POST)
 	public void createGroupMember(@PathVariable int groupId, @PathVariable int contactId) {
-		GroupMemberDto groupMember = new GroupMemberDto();
+		GroupMemberEntity groupMember = new GroupMemberEntity();
 		groupMember.setGroupId(groupId);
 		groupMember.setContactId(contactId);
 		groupMemberService.saveGroupMember(groupMember);

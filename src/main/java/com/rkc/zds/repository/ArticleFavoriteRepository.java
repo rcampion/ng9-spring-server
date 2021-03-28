@@ -7,17 +7,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.rkc.zds.dto.ArticleCommentDto;
-import com.rkc.zds.dto.ArticleFavoriteDto;
+import com.rkc.zds.entity.ArticleCommentEntity;
+import com.rkc.zds.entity.ArticleFavoriteEntity;
 
-public interface ArticleFavoriteRepository extends JpaRepository<ArticleFavoriteDto, Integer> {
-	ArticleFavoriteDto save(ArticleFavoriteDto articleFavorite);
+public interface ArticleFavoriteRepository extends JpaRepository<ArticleFavoriteEntity, Integer> {
+	ArticleFavoriteEntity save(ArticleFavoriteEntity articleFavorite);
 
-	Optional<ArticleFavoriteDto> findByArticleIdAndUserId(Integer articleId, Integer userId);
+	Optional<ArticleFavoriteEntity> findByArticleIdAndUserId(Integer articleId, Integer userId);
 	
-	List<ArticleFavoriteDto> findByArticleId(Integer articleId);
+	List<ArticleFavoriteEntity> findByArticleId(Integer articleId);
 
-	List<ArticleFavoriteDto> findByUserId(Integer id);
+	List<ArticleFavoriteEntity> findByUserId(Integer id);
 
-	Page<ArticleFavoriteDto> findPageByUserId(Pageable pageable, Integer id);
+	Page<ArticleFavoriteEntity> findPageByUserId(Pageable pageable, Integer id);
 }

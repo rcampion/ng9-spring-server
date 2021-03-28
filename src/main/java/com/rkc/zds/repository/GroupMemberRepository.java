@@ -10,13 +10,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.rkc.zds.dto.GroupDto;
-import com.rkc.zds.dto.GroupMemberDto;
+import com.rkc.zds.entity.GroupEntity;
+import com.rkc.zds.entity.GroupMemberEntity;
 
-public interface GroupMemberRepository extends JpaRepository<GroupMemberDto, Integer> {
+public interface GroupMemberRepository extends JpaRepository<GroupMemberEntity, Integer> {
   
-	Page<GroupMemberDto> findByGroupId(Pageable pageable, int groupId);
+	Page<GroupMemberEntity> findByGroupId(Pageable pageable, int groupId);
 
-	List<GroupMemberDto> findByGroupId(int groupId);
+	List<GroupMemberEntity> findByGroupId(int groupId);
 	       
 }

@@ -5,15 +5,16 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+
+import com.rkc.zds.entity.ContactEntity;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.rkc.zds.dto.ContactDto;
-
-public interface ContactRepository extends JpaRepository<ContactDto, Integer>, JpaSpecificationExecutor<ContactDto> {
+public interface ContactRepository extends JpaRepository<ContactEntity, Integer>, JpaSpecificationExecutor<ContactEntity> {
   
-	Page<ContactDto> findByLastNameIgnoreCaseLike(Pageable pageable, String lastName);
+	Page<ContactEntity> findByLastNameIgnoreCaseLike(Pageable pageable, String lastName);
 	 
 }

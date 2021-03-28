@@ -15,9 +15,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.AuthorityEntity;
+import com.rkc.zds.entity.UserEntity;
 import com.rkc.zds.service.UserService;
-import com.rkc.zds.dto.AuthorityDto;
 
 @Service("userDetailsService")
 public class MyUserDetailsService implements UserDetailsService {
@@ -29,7 +29,7 @@ public class MyUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(final String userName) throws UsernameNotFoundException {
 
-		UserDto user = userService.findByUserName(userName);
+		UserEntity user = userService.findByUserName(userName);
 		if (user != null) {
 			List<GrantedAuthority> authorities = buildUserAuthority(user.getAuthorities());
 
@@ -42,7 +42,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
 	// Converts UserDto user to
 	// org.springframework.security.core.userdetails.User
-	private User buildUserForAuthentication(UserDto user, List<GrantedAuthority> authorities) {
+	private User buildUserForAuthentication(UserEntity user, List<GrantedAuthority> authorities) {
 		return new User(user.getUserName(), user.getPassword(), user.isEnabled(), true, true, true, authorities);
 	}
 /*
@@ -61,12 +61,12 @@ public class MyUserDetailsService implements UserDetailsService {
 	}
 */
 	
-	private List<GrantedAuthority> buildUserAuthority(List<AuthorityDto> authorityDtos) {
+	private List<GrantedAuthority> buildUserAuthority(List<AuthorityEntity> authorityDtos) {
 
 		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
 
 		// Build user's authorities
-		for (AuthorityDto authorityDto : authorityDtos) {
+		for (AuthorityEntity authorityDto : authorityDtos) {
 			setAuths.add(new SimpleGrantedAuthority(authorityDto.getAuthority()));
 		}
 

@@ -28,7 +28,7 @@ public class WebAppConfig implements WebMvcConfigurer {
 
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				//registry.addMapping("/**").allowCredentials(true).allowedOrigins("http://www.zdslogic-development.com:4200");
+				//registry.addMapping("/**").allowCredentials(true).allowedOrigins("http://localhost:4200");
 				registry.addMapping("/**")
 				.allowedOrigins("*")
 				.allowCredentials(true)

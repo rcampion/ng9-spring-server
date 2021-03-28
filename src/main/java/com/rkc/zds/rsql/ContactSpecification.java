@@ -2,7 +2,7 @@ package com.rkc.zds.rsql;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.rkc.zds.dto.ContactDto;
+import com.rkc.zds.entity.ContactEntity;
 import com.rkc.zds.util.SpecSearchCriteria;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -10,7 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public class ContactSpecification implements Specification<ContactDto> {
+public class ContactSpecification implements Specification<ContactEntity> {
 
 	private SpecSearchCriteria criteria;
 
@@ -24,7 +24,7 @@ public class ContactSpecification implements Specification<ContactDto> {
 	}
 
 	@Override
-	public Predicate toPredicate(final Root<ContactDto> root, final CriteriaQuery<?> query, final CriteriaBuilder builder) {
+	public Predicate toPredicate(final Root<ContactEntity> root, final CriteriaQuery<?> query, final CriteriaBuilder builder) {
 		switch (criteria.getOperation()) {
 		case EQUALITY:
 			return builder.equal(root.get(criteria.getKey()), criteria.getValue());

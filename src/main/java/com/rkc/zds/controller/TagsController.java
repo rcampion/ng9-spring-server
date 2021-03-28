@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rkc.zds.api.exception.NoAuthorizationException;
 import com.rkc.zds.api.exception.ResourceNotFoundException;
 import com.rkc.zds.core.service.AuthorizationService;
-import com.rkc.zds.dto.ArticleTagArticleDto;
-import com.rkc.zds.dto.ArticleTagDto;
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.ArticleTagArticleEntity;
+import com.rkc.zds.entity.ArticleTagEntity;
+import com.rkc.zds.entity.UserEntity;
 import com.rkc.zds.repository.ArticleRepository;
 import com.rkc.zds.repository.ArticleTagArticleRepository;
 import com.rkc.zds.repository.ArticleTagRepository;
@@ -28,10 +28,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-@CrossOrigin(origins = "http://www.zdslogic-development.com:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(path = "/api/tags")
-public class TagsApi {
+public class TagsController {
 		
 	@Autowired
 	UserRepository userRepository;
@@ -48,7 +48,7 @@ public class TagsApi {
     private TagsQueryService tagsQueryService;
 
     @Autowired
-    public TagsApi(TagsQueryService tagsQueryService) {
+    public TagsController(TagsQueryService tagsQueryService) {
         this.tagsQueryService = tagsQueryService;
     }
 
@@ -66,20 +66,20 @@ public class TagsApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 		
-		UserDto user = null;
+		UserEntity user = null;
 		
 		if(userDto.isPresent()) {
 			user = userDto.get();
 		}
 		
-		final UserDto temp = user;
+		final UserEntity temp = user;
 		
 		
-		ArticleTagDto tagDto = tagRepository.findByName(tag);
+		ArticleTagEntity tagDto = tagRepository.findByName(tag);
 		
-		ArticleTagArticleDto tagArticle = tagArticleRepository.findByTagIdAndArticleId(tagDto.getId(), id);
+		ArticleTagArticleEntity tagArticle = tagArticleRepository.findByTagIdAndArticleId(tagDto.getId(), id);
 		
 		//return articleRepository.findBySlug(slug).map(article -> {
 		return articleRepository.findById(id).map(article -> {
@@ -89,7 +89,7 @@ public class TagsApi {
 			tagArticleRepository.delete(tagArticle);
 			
 			//if there are no articles with this tag, delete tag
-			List<ArticleTagArticleDto> tagArticleList = new ArrayList<ArticleTagArticleDto>();
+			List<ArticleTagArticleEntity> tagArticleList = new ArrayList<ArticleTagArticleEntity>();
 			tagArticleList = tagArticleRepository.findByTagId(tagDto.getId());
 			if(tagArticleList.size()==0) {
 				tagRepository.delete(tagDto);
@@ -106,21 +106,21 @@ public class TagsApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 		
-		UserDto user = null;
+		UserEntity user = null;
 		
 		if(userDto.isPresent()) {
 			user = userDto.get();
 		}
 		
-		final UserDto temp = user;
+		final UserEntity temp = user;
 		
 		String tag = "";
 		
-		ArticleTagDto tagDto = tagRepository.findByName(tag);
+		ArticleTagEntity tagDto = tagRepository.findByName(tag);
 		
-		ArticleTagArticleDto tagArticle = tagArticleRepository.findByTagIdAndArticleId(tagDto.getId(), id);
+		ArticleTagArticleEntity tagArticle = tagArticleRepository.findByTagIdAndArticleId(tagDto.getId(), id);
 		
 		//return articleRepository.findBySlug(slug).map(article -> {
 		return articleRepository.findById(id).map(article -> {
@@ -130,7 +130,7 @@ public class TagsApi {
 			tagArticleRepository.delete(tagArticle);
 			
 			//if there are no articles with this tag, delete tag
-			List<ArticleTagArticleDto> tagArticleList = new ArrayList<ArticleTagArticleDto>();
+			List<ArticleTagArticleEntity> tagArticleList = new ArrayList<ArticleTagArticleEntity>();
 			tagArticleList = tagArticleRepository.findByTagId(tagDto.getId());
 			if(tagArticleList.size()==0) {
 				tagRepository.delete(tagDto);

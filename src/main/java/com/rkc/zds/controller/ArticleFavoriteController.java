@@ -2,9 +2,9 @@ package com.rkc.zds.controller;
 
 import com.rkc.zds.api.exception.ResourceNotFoundException;
 import com.rkc.zds.model.ArticleData;
-import com.rkc.zds.dto.ArticleDto;
-import com.rkc.zds.dto.ArticleFavoriteDto;
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.ArticleEntity;
+import com.rkc.zds.entity.ArticleFavoriteEntity;
+import com.rkc.zds.entity.UserEntity;
 import com.rkc.zds.repository.ArticleFavoriteRepository;
 import com.rkc.zds.repository.ArticleRepository;
 import com.rkc.zds.repository.UserRepository;
@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://www.zdslogic-development.com:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(path = "/api/articles/{id}/favorite")
-public class ArticleFavoriteApi {
+public class ArticleFavoriteController {
 	private ArticleFavoriteRepository articleFavoriteRepository;
 	private ArticleRepository articleRepository;
 	private ArticleQueryService articleQueryService;
@@ -37,7 +37,7 @@ public class ArticleFavoriteApi {
 	UserRepository userRepository;
 
 	@Autowired
-	public ArticleFavoriteApi(ArticleFavoriteRepository articleFavoriteRepository, ArticleRepository articleRepository,
+	public ArticleFavoriteController(ArticleFavoriteRepository articleFavoriteRepository, ArticleRepository articleRepository,
 			ArticleQueryService articleQueryService) {
 		this.articleFavoriteRepository = articleFavoriteRepository;
 		this.articleRepository = articleRepository;
@@ -51,19 +51,19 @@ public class ArticleFavoriteApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 
-		UserDto user = null;
+		UserEntity user = null;
 
 		if (userDto.isPresent()) {
 			user = userDto.get();
 		}
 
-		ArticleDto article = getArticle(id);
-		Optional<ArticleFavoriteDto> articleFavoriteTemp = articleFavoriteRepository
+		ArticleEntity article = getArticle(id);
+		Optional<ArticleFavoriteEntity> articleFavoriteTemp = articleFavoriteRepository
 				.findByArticleIdAndUserId(article.getId(), user.getId());
 		if (!articleFavoriteTemp.isPresent()) {
-			ArticleFavoriteDto articleFavorite = new ArticleFavoriteDto(article.getId(), user.getId());
+			ArticleFavoriteEntity articleFavorite = new ArticleFavoriteEntity(article.getId(), user.getId());
 			articleFavoriteRepository.save(articleFavorite);
 		}
 		return responseArticleData(articleQueryService.findById(id, user).get());
@@ -75,15 +75,15 @@ public class ArticleFavoriteApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 
-		UserDto user = null;
+		UserEntity user = null;
 
 		if (userDto.isPresent()) {
 			user = userDto.get();
 		}
 
-		ArticleDto article = getArticle(id);
+		ArticleEntity article = getArticle(id);
 		articleFavoriteRepository.findByArticleIdAndUserId(article.getId(), user.getId()).ifPresent(favorite -> {
 			articleFavoriteRepository.delete(favorite);
 		});
@@ -99,7 +99,7 @@ public class ArticleFavoriteApi {
 		});
 	}
 
-	private ArticleDto getArticle(Integer id) {
+	private ArticleEntity getArticle(Integer id) {
 		return articleRepository.findById(id).map(article -> article).orElseThrow(ResourceNotFoundException::new);
 	}
 }

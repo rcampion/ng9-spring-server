@@ -4,19 +4,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rkc.zds.dto.PhoneDto;
+import com.rkc.zds.entity.PhoneEntity;
 
 public interface PhoneService {
-    Page<PhoneDto> findPhones(Pageable pageable, int contactId);
+    Page<PhoneEntity> findPhones(Pageable pageable, int contactId);
     
     // @Transactional     
-    PhoneDto getPhone(int id);  
+    PhoneEntity getPhone(int id);  
 
     // @Transactional    
-    public void savePhone(PhoneDto phone);
+    public void savePhone(PhoneEntity phone);
     
     // @Transactional    
-    public void updatePhone(PhoneDto phone);
+    public void updatePhone(PhoneEntity phone);
 
     // @Transactional  
 	void deletePhone(int id);

@@ -11,9 +11,9 @@ import com.rkc.zds.api.exception.NoAuthorizationException;
 import com.rkc.zds.api.exception.ResourceNotFoundException;
 import com.rkc.zds.core.service.AuthorizationService;
 import com.rkc.zds.model.CommentData;
-import com.rkc.zds.dto.ArticleCommentDto;
-import com.rkc.zds.dto.ArticleDto;
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.ArticleCommentEntity;
+import com.rkc.zds.entity.ArticleEntity;
+import com.rkc.zds.entity.UserEntity;
 import com.rkc.zds.repository.ArticleRepository;
 import com.rkc.zds.repository.UserRepository;
 import com.rkc.zds.repository.ArticleCommentRepository;
@@ -52,10 +52,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://www.zdslogic-development.com:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 //@RequestMapping(path = "/articles/{slug}/comments")
-public class CommentsApi {
+public class CommentsController {
 	private ArticleRepository articleRepository;
 	private ArticleCommentRepository commentRepository;
 	private CommentQueryService commentQueryService;
@@ -64,7 +64,7 @@ public class CommentsApi {
 	UserRepository userRepository;
 
 	@Autowired
-	public CommentsApi(ArticleRepository articleRepository, ArticleCommentRepository commentRepository,
+	public CommentsController(ArticleRepository articleRepository, ArticleCommentRepository commentRepository,
 			CommentQueryService commentQueryService) {
 		this.articleRepository = articleRepository;
 		this.commentRepository = commentRepository;
@@ -92,17 +92,17 @@ public class CommentsApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 		
-		UserDto user = null;
+		UserEntity user = null;
 		
 		if(userDto.isPresent()) {
 			user = userDto.get();
 		}
 
-		ArticleDto article = findArticle(id);
+		ArticleEntity article = findArticle(id);
 
-		ArticleCommentDto comment = new ArticleCommentDto();
+		ArticleCommentEntity comment = new ArticleCommentEntity();
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -130,15 +130,15 @@ public class CommentsApi {
 //	public ResponseEntity getComments(@PathVariable("slug") String slug) {
 	public ResponseEntity getComments(@PathVariable("articleId") Integer articleId) {
 		
-		ArticleDto article = findArticle(articleId);
+		ArticleEntity article = findArticle(articleId);
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 		
-		UserDto user = null;
+		UserEntity user = null;
 		
 		if(userDto.isPresent()) {
 			user = userDto.get();
@@ -154,20 +154,20 @@ public class CommentsApi {
 
 	@RequestMapping(path = "/api/articles/{articleId}/comments/{commentId}", method = RequestMethod.DELETE)
 	public ResponseEntity deleteComment(@PathVariable("articleId") Integer articleId, @PathVariable("commentId") Integer commentId) {
-		ArticleDto article = findArticle(articleId);
+		ArticleEntity article = findArticle(articleId);
 			
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 		
-		UserDto user = null;
+		UserEntity user = null;
 		if(userDto.isPresent()) {
 			user = userDto.get();
 		}
 		
-		final UserDto userTemp = user;
+		final UserEntity userTemp = user;
 		
 		return commentRepository.findByArticleIdAndId(article.getId(), commentId).map(comment -> {
 			if (!AuthorizationService.canWriteComment(userTemp, article, comment)) {
@@ -178,7 +178,7 @@ public class CommentsApi {
 		}).orElseThrow(ResourceNotFoundException::new);
 	}
 
-	private ArticleDto findArticle(Integer id) {
+	private ArticleEntity findArticle(Integer id) {
 		return articleRepository.findById(id).map(article -> article).orElseThrow(ResourceNotFoundException::new);
 	}
 

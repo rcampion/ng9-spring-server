@@ -13,9 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rkc.zds.dto.ContactDto;
-import com.rkc.zds.dto.GroupDto;
-import com.rkc.zds.dto.GroupMemberDto;
+import com.rkc.zds.entity.ContactEntity;
+import com.rkc.zds.entity.GroupEntity;
+import com.rkc.zds.entity.GroupMemberEntity;
 import com.rkc.zds.repository.GroupRepository;
 import com.rkc.zds.repository.GroupMemberRepository;
 import com.rkc.zds.service.GroupService;
@@ -31,7 +31,7 @@ public class GroupServiceImpl implements GroupService {
 	private GroupMemberRepository groupMemberRepo;
 	
 	@Override
-	public Page<GroupDto> findGroups(Pageable pageable) {
+	public Page<GroupEntity> findGroups(Pageable pageable) {
 
 		int pageNumber = pageable.getPageNumber();
 
@@ -41,17 +41,17 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public GroupDto getGroup(int id) {
+	public GroupEntity getGroup(int id) {
 		
-		Optional<GroupDto> group = groupRepo.findById(id);
+		Optional<GroupEntity> group = groupRepo.findById(id);
 		
 		return group.get();
 
 	}
 
 	@Override
-	public Page<GroupMemberDto> findGroupMembers(int id) {
-		GroupDto group = groupRepo.getOne(id);
+	public Page<GroupMemberEntity> findGroupMembers(int id) {
+		GroupEntity group = groupRepo.getOne(id);
 
 		final PageRequest pageRequest = PageRequest.of(0, 10, sortByNameASC());
 
@@ -61,7 +61,7 @@ public class GroupServiceImpl implements GroupService {
 	}
 	
 	@Override
-	public Page<GroupDto> searchGroups(String name) {
+	public Page<GroupEntity> searchGroups(String name) {
 
 		final PageRequest pageRequest = PageRequest.of(0, 10, sortByNameASC());
 
@@ -70,13 +70,13 @@ public class GroupServiceImpl implements GroupService {
 
 	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public void saveGroup(GroupDto group) {
+	public void saveGroup(GroupEntity group) {
 		groupRepo.save(group);
 	}
 
 	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public void updateGroup(GroupDto group) {
+	public void updateGroup(GroupEntity group) {
 		groupRepo.saveAndFlush(group);
 	}
 
@@ -86,9 +86,9 @@ public class GroupServiceImpl implements GroupService {
 	public void deleteGroup(int groupId) {
 		
 		//delete all group members for this group prior to deleting group.		
-		List<GroupMemberDto> list = groupMemberRepo.findByGroupId(groupId);
+		List<GroupMemberEntity> list = groupMemberRepo.findByGroupId(groupId);
 		
-		for(GroupMemberDto element : list){
+		for(GroupMemberEntity element : list){
 			groupMemberRepo.delete(element);
 		}
 		
@@ -100,7 +100,7 @@ public class GroupServiceImpl implements GroupService {
 	}
 	
 	@Override
-	public Page<GroupDto> searchGroups(Pageable pageable, Specification<GroupDto> spec) {
+	public Page<GroupEntity> searchGroups(Pageable pageable, Specification<GroupEntity> spec) {
 		return groupRepo.findAll(spec, pageable);
 	}
 }

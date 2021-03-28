@@ -7,28 +7,28 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rkc.zds.dto.GroupDto;
-import com.rkc.zds.dto.GroupMemberDto;
+import com.rkc.zds.entity.GroupEntity;
+import com.rkc.zds.entity.GroupMemberEntity;
 
 public interface GroupService {
 
-    Page<GroupDto> findGroups(Pageable pageable);
+    Page<GroupEntity> findGroups(Pageable pageable);
 
-    Page<GroupDto> searchGroups(String name);
+    Page<GroupEntity> searchGroups(String name);
     
-	Page<GroupDto> searchGroups(Pageable pageable, Specification<GroupDto> spec);
+	Page<GroupEntity> searchGroups(Pageable pageable, Specification<GroupEntity> spec);
 
     // @Transactional     
-    GroupDto getGroup(int id);    
+    GroupEntity getGroup(int id);    
 
     // @Transactional     
-    Page<GroupMemberDto> findGroupMembers(int id); 
+    Page<GroupMemberEntity> findGroupMembers(int id); 
     
     // @Transactional    
-    public void saveGroup(GroupDto group);
+    public void saveGroup(GroupEntity group);
 
     // @Transactional    
-    public void updateGroup(GroupDto group);
+    public void updateGroup(GroupEntity group);
 
     // @Transactional  
 	void deleteGroup(int id);

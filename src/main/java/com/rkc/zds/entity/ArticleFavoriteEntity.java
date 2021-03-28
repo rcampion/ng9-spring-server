@@ -1,4 +1,4 @@
-package com.rkc.zds.dto;
+package com.rkc.zds.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,13 +7,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 @Entity
 @Table(name = "PCM_ARTICLE_FAVORITES")
-public class ArticleFavoriteDto {
+public class ArticleFavoriteEntity {
 	@Id
 	@Column(name="ID", unique = true)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -25,11 +21,11 @@ public class ArticleFavoriteDto {
 	@Column(name="USER_ID")	
     private Integer userId;
 
-	public ArticleFavoriteDto() {
+	public ArticleFavoriteEntity() {
 		
 	}
 	
-    public ArticleFavoriteDto(Integer articleId, Integer userId) {
+    public ArticleFavoriteEntity(Integer articleId, Integer userId) {
         this.articleId = articleId;
         this.userId = userId;
     }

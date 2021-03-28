@@ -3,8 +3,8 @@ package com.rkc.zds.controller;
 import com.rkc.zds.api.exception.ResourceNotFoundException;
 import com.rkc.zds.model.ProfileData;
 import com.rkc.zds.core.user.FollowRelation;
-import com.rkc.zds.dto.ArticleFollowDto;
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.ArticleFollowEntity;
+import com.rkc.zds.entity.UserEntity;
 import com.rkc.zds.repository.UserRepository;
 import com.rkc.zds.repository.ArticleFollowRepository;
 import com.rkc.zds.service.ProfileQueryService;
@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Optional;
-@CrossOrigin(origins = "http://www.zdslogic-development.com:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(path = "/api/profiles/{userName:.+}")
-public class ProfileApi {
+public class ProfileController {
     private ProfileQueryService profileQueryService;
     private UserRepository userRepository;
 
@@ -36,7 +36,7 @@ public class ProfileApi {
     ArticleFollowRepository followRepository;
     
     @Autowired
-    public ProfileApi(ProfileQueryService profileQueryService, UserRepository userRepository) {
+    public ProfileController(ProfileQueryService profileQueryService, UserRepository userRepository) {
         this.profileQueryService = profileQueryService;
         this.userRepository = userRepository;
     }
@@ -48,9 +48,9 @@ public class ProfileApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 		
-		UserDto user = null;
+		UserEntity user = null;
 		
 		if(userDto.isPresent()) {
 			user = userDto.get();
@@ -71,22 +71,22 @@ public class ProfileApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 		
-		UserDto user = null;
-		UserDto target = null;
+		UserEntity user = null;
+		UserEntity target = null;
 		
 		if(userDto.isPresent()) {
 			user = userDto.get();
 		}
     	
-    	Optional<UserDto> targetDto = userRepository.findByUserName(userName);
+    	Optional<UserEntity> targetDto = userRepository.findByUserName(userName);
     	
 		if(targetDto.isPresent()) {
 			target = targetDto.get();
 		}    	
 
-		ArticleFollowDto follow = new ArticleFollowDto();
+		ArticleFollowEntity follow = new ArticleFollowEntity();
 		follow.setUserId(user.getId());
 		follow.setFollowId(target.getId());
 		
@@ -112,22 +112,22 @@ public class ProfileApi {
 
 		String userLogin = authentication.getName();
 
-		Optional<UserDto> userDto = userRepository.findByUserName(userLogin);
+		Optional<UserEntity> userDto = userRepository.findByUserName(userLogin);
 		
-		UserDto user = null;
-		UserDto target = null;
+		UserEntity user = null;
+		UserEntity target = null;
 		
 		if(userDto.isPresent()) {
 			user = userDto.get();
 		}
     	
-    	Optional<UserDto> targetDto = userRepository.findByUserName(userName);
+    	Optional<UserEntity> targetDto = userRepository.findByUserName(userName);
     	
 		if(targetDto.isPresent()) {
 			target = targetDto.get();
 		}    	
 
-		ArticleFollowDto follow = followRepository.findByUserIdAndFollowId(user.getId(), target.getId());
+		ArticleFollowEntity follow = followRepository.findByUserIdAndFollowId(user.getId(), target.getId());
 		
 		followRepository.delete(follow);
 		

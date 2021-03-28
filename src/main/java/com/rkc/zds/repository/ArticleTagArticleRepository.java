@@ -7,17 +7,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import com.rkc.zds.dto.ArticleDto;
-import com.rkc.zds.dto.ArticleTagArticleDto;
+import com.rkc.zds.entity.ArticleEntity;
+import com.rkc.zds.entity.ArticleTagArticleEntity;
 
-public interface ArticleTagArticleRepository extends JpaRepository<ArticleTagArticleDto, Integer>, JpaSpecificationExecutor<ArticleTagArticleDto> {
+public interface ArticleTagArticleRepository extends JpaRepository<ArticleTagArticleEntity, Integer>, JpaSpecificationExecutor<ArticleTagArticleEntity> {
 
-	List<ArticleTagArticleDto> findByTagId(Integer id);
+	List<ArticleTagArticleEntity> findByTagId(Integer id);
 
-	ArticleTagArticleDto findByTagIdAndArticleId(Integer tagId, Integer articleId);
+	ArticleTagArticleEntity findByTagIdAndArticleId(Integer tagId, Integer articleId);
 
-	List<ArticleTagArticleDto> findByArticleId(Integer articleId);
+	List<ArticleTagArticleEntity> findByArticleId(Integer articleId);
 
-	Page<ArticleTagArticleDto> findByTagId(Pageable pageable, Integer id);
+	Page<ArticleTagArticleEntity> findByTagId(Pageable pageable, Integer id);
 
 }

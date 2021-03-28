@@ -12,9 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.rkc.zds.dto.ContactDto;
-import com.rkc.zds.dto.GroupMemberDto;
-import com.rkc.zds.dto.UserContactDto;
+import com.rkc.zds.entity.ContactEntity;
+import com.rkc.zds.entity.GroupMemberEntity;
+import com.rkc.zds.entity.UserContactEntity;
 import com.rkc.zds.repository.ContactRepository;
 import com.rkc.zds.repository.GroupMemberRepository;
 import com.rkc.zds.service.GroupMemberService;
@@ -29,33 +29,33 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 	private GroupMemberRepository groupMemberRepo;
 
 	@Override
-	public Page<GroupMemberDto> findGroupMembers(Pageable pageable, int id) {
+	public Page<GroupMemberEntity> findGroupMembers(Pageable pageable, int id) {
 
-		Page<GroupMemberDto> page = groupMemberRepo.findByGroupId(pageable, id);
+		Page<GroupMemberEntity> page = groupMemberRepo.findByGroupId(pageable, id);
 
 		return page;
 	}
 	
 	@Override
-	public Page<ContactDto> findFilteredContacts(Pageable pageable, int groupId) {
+	public Page<ContactEntity> findFilteredContacts(Pageable pageable, int groupId) {
 
-		List<ContactDto> contacts = contactRepo.findAll();
+		List<ContactEntity> contacts = contactRepo.findAll();
 
-		List<GroupMemberDto> groupMemberList = groupMemberRepo.findByGroupId(groupId);
+		List<GroupMemberEntity> groupMemberList = groupMemberRepo.findByGroupId(groupId);
 		
-		List<ContactDto> testList = new ArrayList<ContactDto>();
+		List<ContactEntity> testList = new ArrayList<ContactEntity>();
 
-		List<ContactDto> filteredList = new ArrayList<ContactDto>();
+		List<ContactEntity> filteredList = new ArrayList<ContactEntity>();
 
 		// build member list of Contacts
-		Optional<ContactDto> contact;
-		for (GroupMemberDto element : groupMemberList) {
+		Optional<ContactEntity> contact;
+		for (GroupMemberEntity element : groupMemberList) {
 			contact= contactRepo.findById(element.getContactId());
 			testList.add(contact.get());
 		}
 
 		// check member list of Contacts
-		for (ContactDto element : contacts) {
+		for (ContactEntity element : contacts) {
 			// if the contact is in the members list, ignore it
 			if (!testList.contains(element)) {
 				filteredList.add(element);
@@ -69,15 +69,15 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 		
 		PageRequest pageRequest = PageRequest.of(0, size);
 
-		PageImpl<ContactDto> page = new PageImpl<ContactDto>(filteredList, pageRequest, size);
+		PageImpl<ContactEntity> page = new PageImpl<ContactEntity>(filteredList, pageRequest, size);
 
 		return page;
 	}
 	
 	@Override
-	public List<GroupMemberDto> findAllMembers(int groupId) {
+	public List<GroupMemberEntity> findAllMembers(int groupId) {
 
-		List<GroupMemberDto> list = groupMemberRepo.findByGroupId(groupId);
+		List<GroupMemberEntity> list = groupMemberRepo.findByGroupId(groupId);
 
 		return list;
 	}
@@ -87,12 +87,12 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 	}
 
 	@Override
-	public void saveGroupMember(GroupMemberDto groupMember) {
+	public void saveGroupMember(GroupMemberEntity groupMember) {
 		// checking for duplicates
-		List<GroupMemberDto> list = groupMemberRepo.findByGroupId(groupMember.getGroupId());
+		List<GroupMemberEntity> list = groupMemberRepo.findByGroupId(groupMember.getGroupId());
 
 		// return if duplicate found
-		for (GroupMemberDto element : list) {
+		for (GroupMemberEntity element : list) {
 			if (element.getContactId() == groupMember.getContactId()) {
 				return;
 			}

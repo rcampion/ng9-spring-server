@@ -19,8 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.rkc.zds.dto.ContactDto;
-import com.rkc.zds.dto.GroupMemberDto;
+
+import com.rkc.zds.entity.ContactEntity;
+import com.rkc.zds.entity.GroupMemberEntity;
 import com.rkc.zds.repository.ContactRepository;
 import com.rkc.zds.repository.GroupMemberRepository;
 import com.rkc.zds.service.ContactService;
@@ -40,31 +41,31 @@ public class ContactServiceImpl implements ContactService {
 	private GroupMemberRepository groupMemberRepo;
 	
 	@Override
-	public Page<ContactDto> findContacts(Pageable pageable) {
+	public Page<ContactEntity> findContacts(Pageable pageable) {
 
 		return contactRepo.findAll(pageable);
 	}
 	
 	@Override
-	public Page<ContactDto> findFilteredContacts(Pageable pageable, int groupId) {
+	public Page<ContactEntity> findFilteredContacts(Pageable pageable, int groupId) {
 
-		List<ContactDto> contacts = contactRepo.findAll();
+		List<ContactEntity> contacts = contactRepo.findAll();
 
-		List<GroupMemberDto> memberList = groupMemberRepo.findByGroupId(groupId);
+		List<GroupMemberEntity> memberList = groupMemberRepo.findByGroupId(groupId);
 		
-		List<ContactDto> testList = new ArrayList<ContactDto>();
+		List<ContactEntity> testList = new ArrayList<ContactEntity>();
 
-		List<ContactDto> filteredList = new ArrayList<ContactDto>();
+		List<ContactEntity> filteredList = new ArrayList<ContactEntity>();
 
 		// build member list of Contacts
-		Optional<ContactDto> contact;
-		for (GroupMemberDto element : memberList) {
+		Optional<ContactEntity> contact;
+		for (GroupMemberEntity element : memberList) {
 			contact= contactRepo.findById(element.getContactId());
 			testList.add(contact.get());
 		}
 
 		// check member list of Contacts
-		for (ContactDto element : contacts) {
+		for (ContactEntity element : contacts) {
 			// if the contact is in the members list, ignore it
 			if (!testList.contains(element)) {
 				filteredList.add(element);
@@ -78,15 +79,15 @@ public class ContactServiceImpl implements ContactService {
 		
 		PageRequest pageRequest = PageRequest.of(0, size);
 
-		PageImpl<ContactDto> page = new PageImpl<ContactDto>(filteredList, pageRequest, size);
+		PageImpl<ContactEntity> page = new PageImpl<ContactEntity>(filteredList, pageRequest, size);
 
 		return page;
 	}
 
 	@Override
-	public ContactDto getContact(int id) {
+	public ContactEntity getContact(int id) {
 	
-		Optional<ContactDto> contact = contactRepo.findById(id);
+		Optional<ContactEntity> contact = contactRepo.findById(id);
 		if(contact.isPresent())
 			return contact.get();
 		else
@@ -94,7 +95,7 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	@Override
-	public Page<ContactDto> searchContacts(String name) {
+	public Page<ContactEntity> searchContacts(String name) {
 
 		final PageRequest pageRequest = PageRequest.of(0, 10, sortByNameASC());
 
@@ -103,7 +104,7 @@ public class ContactServiceImpl implements ContactService {
 
 	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public void saveContact(ContactDto contact) {
+	public void saveContact(ContactEntity contact) {
 
 		// test
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -113,7 +114,7 @@ public class ContactServiceImpl implements ContactService {
 
 	@Override
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public void updateContact(ContactDto contact) {
+	public void updateContact(ContactEntity contact) {
 
 		// test
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -137,13 +138,13 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	@Override
-	public Page<ContactDto> searchContacts(Pageable pageable, List<SearchCriteria> params) {
+	public Page<ContactEntity> searchContacts(Pageable pageable, List<SearchCriteria> params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Page<ContactDto> searchContacts(Pageable pageable, Specification<ContactDto> spec) {
+	public Page<ContactEntity> searchContacts(Pageable pageable, Specification<ContactEntity> spec) {
 		return contactRepo.findAll(spec, pageable);
 	}
 

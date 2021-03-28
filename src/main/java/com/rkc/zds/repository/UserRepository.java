@@ -6,20 +6,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.rkc.zds.core.user.FollowRelation;
-import com.rkc.zds.dto.UserDto;
+import com.rkc.zds.entity.UserEntity;
 
-public interface UserRepository extends JpaRepository<UserDto, Integer>, JpaSpecificationExecutor<UserDto>{
+public interface UserRepository extends JpaRepository<UserEntity, Integer>, JpaSpecificationExecutor<UserEntity>{
 	//UserDto findByUserName(String userName);
 
-	UserDto findByLogin(String login);
+	UserEntity findByLogin(String login);
 	
     // void save(UserDto user);
 
-    Optional<UserDto> findById(String id);
+    Optional<UserEntity> findById(String id);
 
-    Optional<UserDto> findByUserName(String userName);
+    Optional<UserEntity> findByUserName(String userName);
 
-    Optional<UserDto> findByEmail(String email);
+    Optional<UserEntity> findByEmail(String email);
 
 //    void saveRelation(FollowRelation followRelation);
 

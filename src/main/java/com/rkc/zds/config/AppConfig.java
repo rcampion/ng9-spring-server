@@ -54,7 +54,7 @@ public class AppConfig {
         factoryBean.setPersistenceUnitName("contacts");
 
         factoryBean.setJpaVendorAdapter(jpaVendorAdapter);
-        factoryBean.setPackagesToScan("com.rkc.zds");
+        factoryBean.setPackagesToScan("com.rkc.zds.entity");
       
 		Properties jpaProperties = new Properties();
 		jpaProperties.put("hibernate.dialect", DerbyTenSevenDialect.class.getName());
